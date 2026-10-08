@@ -634,7 +634,7 @@ async def async_setup_entry(
             )
         # Master LAN-PON ports come from sta-user.asp (8080) or port 80; once
         # the AC's own ponport_info list is known only its ports get
-        # entities (RL8001GR: LANPON1 only, stage 6b).
+        # entities (RH8001GR: LANPON1 only, stage 6b).
         reported_lanpon = coordinator.data.web_lanpon_ports
         for ponid in coordinator.data.lanpon_ports:
             if ponid in known_lanpon_ports:

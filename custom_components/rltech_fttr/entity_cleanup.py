@@ -108,7 +108,7 @@ def async_remove_extra_lanpon_entities(
     sta-user.asp parse (RltechData.web_lanpon_ports; only a non-empty parse
     ever lands there). Empty or None (never parsed, fetch failed): nothing
     is deleted. Otherwise LANPON<n> sensors with n greater than the list
-    length, and not a reported ponid, are removed (RL8001GR: only LANPON1).
+    length, and not a reported ponid, are removed (RH8001GR: only LANPON1).
     """
     if not reported_ports:
         return []

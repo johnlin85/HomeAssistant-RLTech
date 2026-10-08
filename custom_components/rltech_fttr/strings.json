@@ -3,7 +3,7 @@
     "step": {
       "user": {
         "title": "RLTech FTTR",
-        "description": "Enter the AC address (WAN or LAN both work) and its Web UI login. The AP list, clients and AP details all come from port 8080. Port 80 and MQTT (8883) are used automatically as extras when Home Assistant can reach the AC's LAN address; without them everything still works.",
+        "description": "Enter the AC address (WAN or LAN both work) and its Web UI login. The AP list, clients and AP details all come from port 8080. Port 80 is used automatically as an extra when Home Assistant can reach the AC's LAN address. MQTT (8883) is optional and off by default; it needs the AC's MQTT PSK. Without them everything still works.",
         "data": {
           "base_url": "AC address",
           "username": "Username",
@@ -114,9 +114,9 @@
           },
           "mqtt": {
             "name": "MQTT enhancement (advanced)",
-            "description": "Live AP/client updates over MQTT (8883, AC LAN only). Leave the address empty for automatic (the detected LAN address).",
+            "description": "Live AP/client updates over MQTT (8883, AC LAN only). Optional and off by default; needs the AC's MQTT PSK (or the factory defaults). Leave the address empty for automatic (the detected LAN address).",
             "data": {
-              "enable_mqtt": "MQTT live data (automatic)",
+              "enable_mqtt": "MQTT live data (optional, off by default)",
               "mqtt_host": "MQTT address (empty = automatic)",
               "mqtt_username": "MQTT username",
               "mqtt_password": "MQTT password (empty = keep)",

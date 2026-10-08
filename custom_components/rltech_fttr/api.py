@@ -3636,7 +3636,7 @@ class RltechClient:
             effective_lanpon = web_lanpon_ports or lanpon_ports
         if web_lanpon_ports:
             # The AC's own ponport_info list decides which LAN-PON ports exist
-            # (RL8001GR: LANPON1 only); port 80 never adds one (stage 6b).
+            # (RH8001GR: LANPON1 only); port 80 never adds one (stage 6b).
             effective_lanpon = {
                 ponid: port
                 for ponid, port in effective_lanpon.items()
