@@ -1,0 +1,914 @@
+<!--
+REAL SAMPLE (sanitized) - RLTech AC 8080 Web UI, captured 2026-09-29 (phase 0) from WAN http://<AC-WAN>:8080.
+Source page: /cgi-bin/sta-user.asp   Capture: GET (Chinese UI labels)
+Firmware: AC hw V0.1.0 / sw V0.0.30 (lan_num=6, lan_pon_num=2); APs FS8820A V0.1.21, RL820GW-AX3 V0.0.51.
+Page content is byte-for-byte what boa returned except for these substitutions (same rules in every real_* file):
+  - Vendor OUI E0:21:FE kept; the device-specific (NIC) part of each MAC is replaced:
+      AP-A (FS8820A)      -> E0:21:FE:A0:A0:0x  (base MAC ..:00, BSSIDs ..:04/..:05)
+      AP-B (RL820GW-AX3)  -> E0:21:FE:B0:B0:0x
+      AC (LAN ..:00, WAN ..:02) -> E0:21:FE:C0:C0:0x
+    The same NIC substitution is applied everywhere the MAC is embedded: PON SN (RLGMFEA0A000 /
+    RLGMFEB0B000, sn_address RLGM-FEA0A000), DevName/HostName (FTTRSub_A0A000 / FTTRSub_B0B000),
+    EUI-64 IPv6 (...:fea0:a000). Upper/lower case and colon/no-colon style of the original are kept.
+  - Other (client) MACs -> 02:00:00:00:00:NN, numbered in first-seen order across all real_* files.
+  - DevSN: AP-A -> RLGM00000000001, AP-B -> RL00000000002; AC serial -> RL0000000000003 (lengths kept).
+  - IPv4: AC LAN /24 -> 192.0.2.X, AC WAN /24 -> 198.51.100.X, AP-A mgmt /24 -> 203.0.113.X
+    (last octet kept, so AP-B = 192.0.2.10, AP-A = 192.0.2.4, AC LAN = 192.0.2.1). Masks kept.
+  - Client IPv6 link-local (other than fe80::1) -> fe80::2:0:0:NN.
+  - UUIDs (AP Fingerprint, task SeqId) -> 00000000-0000-4000-8000-0000000000NN.
+  - Client host names -> client-host-NN; SSID -> TEST_SSID / TEST_SSID_5G.
+  - No ecntToken, cookie or password appears in these pages (checked); nothing else was removed.
+-->
+
+
+<!--[if IE]>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--[else]>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<![endif]-->
+<HTML><HEAD><TITLE>用户侧信息</TITLE>
+<META http-equiv=Content-Language content=zh-cn>
+<META http-equiv=Content-Type content="text/html; charset=utf8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<link href="/bootstrap-4.6.2/css/bootstrap.min.css" type=text/css rel=stylesheet>
+<link href="/bootstrap-4.6.2/font/bootstrap-icons.css" type=text/css rel=stylesheet>
+<link href="/JS/tabler.min.css" type=text/css rel=stylesheet>
+<LINK href="/JS/stylemain.css" type=text/css rel=stylesheet>
+<SCRIPT language=javascript src="/JS/jquery-1.10.2.min.js"></SCRIPT>
+<script language=javascript src="/bootstrap-4.6.2/js/bootstrap.bundle.min.js"></script>
+<SCRIPT language=javascript src="/JS/tabler.min.js"></SCRIPT>
+<SCRIPT language=javascript src="/JS/menu.js"></SCRIPT>
+ 
+<SCRIPT language=JavaScript type=text/javascript src="/cgi-bin/showusb.cgi"></SCRIPT>
+
+<SCRIPT language=javascript src="/JS/util.js"></SCRIPT>
+<SCRIPT language=JavaScript src="/JS/printtable.js"></SCRIPT>
+<SCRIPT language=javascript src="/JS/json2.js"></SCRIPT>
+<META content="MSHTML 6.00.6000.16809" name=GENERATOR></HEAD>
+<BODY style="TEXT-ALIGN: center" vLink=#000000 aLink=#000000 link=#000000 leftMargin=0 topMargin=0 
+onload="FinishLoad();if(getElById('ConfigForm') != null)LoadFrame()"
+onunload=DoUnload() marginheight="0" marginwidth="0">
+<div class="page">
+  <aside class="navbar navbar-vertical navbar-expand-lg navbar-dark">
+    <div class="container-fluid">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#sidebar-menu" aria-controls="sidebar-menu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <h1 class="navbar-brand navbar-brand-autodark">
+        <a href="#">
+            <img src="/img/background_logo.png" width="110" height="5" class="navbar-brand-image">
+          <span>
+            <SCRIPT language=javascript>
+              document.write(top.productionName);
+            </SCRIPT>
+          </span>
+        </a>
+      </h1>
+      <div class="navbar-nav flex-row d-lg-none">
+        <div class="nav-item dropdown">
+          <a class="nav-link logout" onclick=DoLogout() href="/cgi-bin/logout.cgi" target=_top>
+            <i class="bi bi-box-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+      <div class="collapse navbar-collapse" id="sidebar-menu">
+        <INPUT id=Selected_Menu type=hidden value="状态->用户侧信息" name=Selected_Menu>
+        <SCRIPT language=javascript>
+          MakeMenu(getElById ('Selected_Menu').value);
+        </SCRIPT>
+      </div>
+    </div>
+  </aside>
+  <header class="navbar navbar-expand-md navbar-light d-none d-lg-flex d-print-none sticky-top">
+    <div class="container-xl">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-menu" aria-controls="navbar-menu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbar-menu">
+        <div>
+          <span>型号: </span>
+          <span>
+            <SCRIPT language=javascript>
+              document.write(top.ModelName);
+            </SCRIPT>
+          </span>
+        </div>
+        <div autocomplete="off" novalidate="" style="margin:0%;">
+          <div class="input-icon">
+            <i class="bi bi-search input-icon-addon"></i>
+            <input type="text" value="" class="form-control" placeholder="功能搜索..." aria-label="Search in website">
+          </div>
+        </div>
+        <ul class="navbar-nav">
+          <li class="nav-item text-nowrap">
+            <a class="nav-link logout" onclick=DoLogout() href="/cgi-bin/logout.cgi" target=_top>退出</a>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+  </header>
+  <div class="page-wrapper">
+    <!-- Page header -->
+    <div class="page-header d-print-none">
+      <div class="container-xl">
+        <div class="row g-2 align-items-center">
+          <div class="col" id="stepNav"></div>
+        </div>
+      </div>
+    </div>
+    <!-- Page body -->
+    <div class="page-body">
+      <div class="container-xl">
+		    <div class="row row-cards">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <ul class="nav nav-tabs card-header-tabs" data-bs-toggle="tabs" role="tablist">
+        
+        
+                  <li name="LANInterfaceInfo" id="LAN接口信息" class="nav-item" role="presentation">
+                  
+                    <a href="#LAN接口信息_item" class="nav-link active" data-bs-toggle="tab" aria-selected="true"
+                    role="tab">以太网接口信息</a>
+                  
+                    
+                  </li>
+        
+        
+        
+        
+                  <li name="USBInterfaceInfo" id="USB接口信息" class="nav-item" role="presentation">
+                    <a href="#USB接口信息_item" class="nav-link" data-bs-toggle="tab" aria-selected="true"
+                    role="tab">USB接口信息</a>
+                  </li>
+        
+        
+        
+        
+        
+        
+                  <li name="LANPonAccessInfo" id="下联光接口接入信息" class="nav-item" role="presentation">
+                    <a href="#下联光接口接入信息_item" class="nav-link" data-bs-toggle="tab" aria-selected="true"
+                    role="tab">下联光接口接入信息</a>
+                  </li>
+                  <!--
+                  <li name="LANPonDevInfo" id="子设备连接状态" class="nav-item" role="presentation">
+                    <a href="#子设备连接状态_item" class="nav-link" data-bs-toggle="tab" aria-selected="true"
+                    role="tab">子设备连接状态</a>
+                  </li>
+                  -->
+        
+                </ul>
+              </div>
+              <div class="card-body tab-content">
+              <!--content start-->
+        <SCRIPT language=JavaScript type=text/javascript>
+		var PortConnStatus = new Array(4);
+		PortConnStatus[0] = "";
+		PortConnStatus[1] = "";
+		PortConnStatus[2] = "";
+		PortConnStatus[3] = "";
+		
+		aryInfoTemp = "6=02:00:00:00:00:04,6=02:00:00:00:00:03,6=02:00:00:00:00:02,6=e0:21:fe:b0:b0:00,6=02:00:00:00:00:05,6=02:00:00:00:00:01,6=e0:21:fe:a0:a0:01,6=e0:21:fe:a0:a0:00,6=02:00:00:00:00:06,5=02:00:00:00:00:07,";
+		var LayerConInterface = aryInfoTemp.split(',');
+		
+function getLanPort(mac)
+{
+	for ( var idx = 0; idx < LayerConInterface.length; idx ++ )
+	{
+			var mac_ports = LayerConInterface[idx];
+			var obj_dif = mac_ports.split('=');
+			if ( 2 == obj_dif.length
+				&& mac.toUpperCase() == obj_dif[1].toUpperCase() )
+				return obj_dif[0];
+	}
+
+	return '0';
+}
+		
+		var wlanEnbl = "N/A";
+		var wlanacEnbl = "N/A";
+
+
+function stWlan(domain,EnableSSID,enable,ssid,BeaconType,BasicEncrypt,BasicAuth,WPAEncrypt,WPAAuth,IEEE11iEncrypt,IEEE11iAuth,Channel,ChannelsInUse)
+{
+this.domain = domain;
+this.EnableSSID = EnableSSID;
+this.enable = enable;
+this.ssid = ssid;
+this.BeaconType = BeaconType;
+this.BasicAuth = BasicAuth;
+this.BasicEncrypt = BasicEncrypt;
+this.WPAAuth = WPAAuth;
+this.WPAEncrypt = WPAEncrypt;
+this.IEEE11iAuth = IEEE11iAuth;
+this.IEEE11iEncrypt = IEEE11iEncrypt;
+this.Channel = Channel;
+this.ChannelsInUse = ChannelsInUse;
+}
+
+var DeviceInfo =  [["0","Computer","  "," ","0"," Static "],null];
+
+
+var WlanInfo = new Array(8);
+
+WlanInfo[0] = new stWlan("0","N/A","N/A","N/A","N/A","N/A","N/A","N/A","N/A","AESEncryption","PSKAuthentication","0","1");
+
+WlanInfo[1] = new stWlan("1","N/A","N/A","N/A","N/A","N/A","N/A","N/A","N/A","AESEncryption","PSKAuthentication","0","1");
+
+WlanInfo[2] = new stWlan("2","N/A","N/A","N/A","N/A","N/A","N/A","N/A","N/A","AESEncryption","PSKAuthentication","0","1");
+WlanInfo[3] = new stWlan("3","N/A","N/A","N/A","N/A","N/A","N/A","N/A","N/A","AESEncryption","PSKAuthentication","0","1");
+
+
+WlanInfo[4] = new stWlan("4","N/A","N/A","N/A","N/A","N/A","N/A","N/A","N/A","AESEncryption","PSKAuthentication","0","1");
+WlanInfo[5] = new stWlan("5","N/A","N/A","N/A","N/A","N/A","N/A","N/A","N/A","AESEncryption","PSKAuthentication","0","1");
+WlanInfo[6] = new stWlan("6","N/A","N/A","N/A","N/A","N/A","N/A","N/A","N/A","AESEncryption","PSKAuthentication","0","1");
+WlanInfo[7] = new stWlan("7","N/A","N/A","N/A","N/A","N/A","N/A","N/A","N/A","AESEncryption","PSKAuthentication","0","1");
+
+
+
+
+var WlanacInfo = new Array(8);
+
+WlanacInfo[0] = new stWlan("0","N/A","N/A","N/A","N/A","N/A","N/A","N/A","N/A","AESEncryption","PSKAuthentication","0","1");
+
+WlanacInfo[1] = new stWlan("1","N/A","N/A","N/A","N/A","N/A","N/A","N/A","N/A","AESEncryption","PSKAuthentication","0","1");
+WlanacInfo[2] = new stWlan("2","N/A","N/A","N/A","N/A","N/A","N/A","N/A","N/A","AESEncryption","PSKAuthentication","0","1");
+WlanacInfo[3] = new stWlan("3","N/A","N/A","N/A","N/A","N/A","N/A","N/A","N/A","AESEncryption","PSKAuthentication","0","1");
+
+
+WlanacInfo[4] = new stWlan("4","N/A","N/A","N/A","N/A","N/A","N/A","N/A","N/A","AESEncryption","PSKAuthentication","0","1");
+WlanacInfo[5] = new stWlan("5","N/A","N/A","N/A","N/A","N/A","N/A","N/A","N/A","AESEncryption","PSKAuthentication","0","1");
+WlanacInfo[6] = new stWlan("6","N/A","N/A","N/A","N/A","N/A","N/A","N/A","N/A","AESEncryption","PSKAuthentication","0","1");
+WlanacInfo[7] = new stWlan("7","N/A","N/A","N/A","N/A","N/A","N/A","N/A","N/A","AESEncryption","PSKAuthentication","0","1");
+
+
+var PacketInfo = new Array();
+PacketInfo = [["0","0","0","0","0","0","0","0","0"],null];
+
+
+
+Ethernet = [["0","Disabled","560097","4123","0","0","3096680","5897","0","0"],["InternetGatewayDevice.LANDevice.1.LANEthernetInterfaceConfig.2","Up","560097","4123","0","0","3096680","5897","0","0"],["InternetGatewayDevice.LANDevice.1.LANEthernetInterfaceConfig.3","Disabled","560362","4124","0","0","3096680","5897","0","0"],["InternetGatewayDevice.LANDevice.1.LANEthernetInterfaceConfig.4","Disabled","560362","4124","0","0","3096680","5897","0","0"],null]
+
+var usbstate0 = "N/A";
+var usbstate1 = "N/A";
+
+var usb = [null];
+var usb1 = usb[0];
+if (usb.length > 1)
+var usb2 = usb[1];
+var i = 0;
+var LanInfo = new Array();
+
+function stUserInfo(domain,name,level,busy)
+{
+	this.domain = domain;
+	this.name = name;
+	this.level = level;
+	this.busy = busy;
+}
+
+var UserInfo = new Array(3);
+	UserInfo[0] = new stUserInfo(0,"administrator","N/A","null");
+	UserInfo[1] = new stUserInfo(1,"useradmin","N/A","null");
+	UserInfo[2] = new stUserInfo(2,"user3","N/A","null");
+
+var k = 1;
+for(k=0; k < UserInfo.length-1; k++)
+{
+	var num = UserInfo[k].level;
+	if (num == 1)
+	{
+		break;
+	}
+}
+var sysUserName = UserInfo[k].name;
+var addressNum = 0;
+var i = 0;
+function ipv6cnst(domain,ipv6address)
+{
+	this.domain = domain;
+	this.ipv6address = ipv6address.split(',');
+	addressNum = this.ipv6address.length;
+}
+var ipv6infost = new Array(new ipv6cnst("1","1111:db8:1::1,fe80::1"),new ipv6cnst("2","1111:db8:2::1,fe80::1"),new ipv6cnst("3","1111:db8:1::1,fe80::1"),null);
+
+
+function LoadFrame()
+{
+	if (curUserName != sptUserName)
+	{
+		document.all("NetPacketInfo_WLan").style.display = "none";
+		document.all("NetPacketInfo_Ethe").style.display = "none";
+	}
+}
+
+function LanInfoConstruction(Device, IPAddr, MACAddr, Status)
+{
+	this.Device = Device;
+	this.IPAddr = IPAddr;
+	this.MACAddr = MACAddr;
+	this.Status = Status;
+}
+function DhcpServerRelTime(timeVal)
+{
+	var timeString = "租期剩余";
+	if (timeVal == 0)
+	{
+	return '租期已满';
+	}
+	if (timeVal >= 60*60*24)
+	{
+	timeString += parseInt(timeVal/(60*60*24)) + "天" ;
+	timeVal %= 60*60*24;
+	}
+	if (timeVal >= 60*60)
+	{
+	timeString += parseInt(timeVal / (60*60)) + "小时" ;
+	timeVal %= 60*60;
+	}
+	if (timeVal >= 60)
+	{
+	timeString += parseInt(timeVal / (60)) + "分钟" ;
+	timeVal %= 60;
+	}
+	if (timeVal > 0)
+	{
+	timeString += timeVal + '秒';
+	}
+	return timeString;
+}
+
+var cfg_menu_list  = new Array( 'WLAN接口信息', 'WLAN5G接口信息', 'LAN接口信息', 'USB接口信息', '接入终端限制信息', '下联光接口接入信息', '子设备连接状态');
+
+cfg_menu_list  = new Array( 'LAN接口信息', 'USB接口信息', '接入终端限制信息', '下联光接口接入信息', '子设备连接状态');
+
+var cfg_cookie_name = 'sta-user-menu';
+init_l_menu();
+
+function drawlanhostinfo(flag)
+{
+	var lanhostvalue = '{"data":[{"MAC":"E0:21:FE:A0:A0:00","IP":"203.0.113.1","IPv6":"fe80::e221:feff:fea0:a000","DhcpStatus":"2","HostName":"FTTRSub_A0A000","ExpireTime":"0","EntryIndex":"1","RxBytes":"0","TxBytes":"2036871","Port":"6"},{"MAC":"02:00:00:00:00:01","IP":"192.0.2.2","IPv6":"","DhcpStatus":"1","HostName":"client-host-01","ExpireTime":"0:19:27:2","EntryIndex":"2","RxBytes":"3300","TxBytes":"6832196","Port":"6"},{"MAC":"02:00:00:00:00:02","IP":"192.0.2.8","IPv6":"fe80::2:0:0:1","DhcpStatus":"1","HostName":"","ExpireTime":"0:17:37:43","EntryIndex":"5","RxBytes":"2100","TxBytes":"338391651","Port":"6"},{"MAC":"02:00:00:00:00:05","IP":"192.0.2.5","IPv6":"","DhcpStatus":"1","HostName":"","ExpireTime":"0:23:51:6","EntryIndex":"6","RxBytes":"1080","TxBytes":"44543688","Port":"6"},{"MAC":"02:00:00:00:00:03","IP":"192.0.2.11","IPv6":"fe80::2:0:0:2","DhcpStatus":"1","HostName":"client-host-02","ExpireTime":"0:22:16:34","EntryIndex":"8","RxBytes":"0","TxBytes":"206303953","Port":"6"}]}'
+	var rsp = JSON.parse(lanhostvalue);
+	var lanhost_list = rsp.data;
+	for( i = 0; i < lanhost_list.length; i++ )
+	{
+		if(lanhost_list[i]['MAC'] != "N/A" || lanhost_list[i]['IP'] != "N/A")
+		{
+			document.write('<TR align="center">');
+			var port_idx = parseInt(getLanPort(lanhost_list[i]['MAC']));
+			if( port_idx == 0 )
+				port_idx = lanhost_list[i]['Port'];
+				
+			if(flag == 1)
+			{
+
+				if ( port_idx >= 1 && port_idx <= 4 )
+
+					document.write('<TD align="center">' + "LAN-" + port_idx +  '&nbsp;</TD>');
+				else 
+					continue;
+			}
+			else if(flag == 2)
+			{
+				if ( port_idx >= 5 && port_idx <= 12 )
+					document.write('<TD align="center">' + "2.4G-" + (port_idx-4) + '&nbsp;</TD>');
+				else
+					continue;
+			}
+			else if(flag == 3)
+			{
+				if ( port_idx >= 13 && port_idx <= 20 )
+					document.write('<TD align="center">' + "5G-" + (port_idx-12) +  '&nbsp;</TD>');
+				else
+					continue;
+			}
+
+			if( port_idx >= 5 )
+
+			{
+			document.write('<TD align="left"><table width=100%><tbody><tr><td width=35%>' + "HostName:" + lanhost_list[i]['HostName'] + "<br></td><td width=25%>" 
+			+  "MAC:" + lanhost_list[i]['MAC']  + "<br></td><td width=40%>" 
+			+ "IPV4:"  + lanhost_list[i]['IP']  + "<br></td></tr><tr><td>"
+			+ "RxBytes:"  + lanhost_list[i]['RxBytes']  + "<br></td><td>"
+			+ "TxBytes:"  + lanhost_list[i]['TxBytes']  + "<br></td><td>" 
+			+ "IPV6:" +  lanhost_list[i]['IPv6'] +  "</td></tr><tr><td>"
+			+ "Psm:" +  lanhost_list[i]['Psm'] +  "<br></td><td>" 
+			+ "Rssi:" +  lanhost_list[i]['Rssi'] +  "<br></td><td>" 
+			+ "Rate:" +  lanhost_list[i]['Rate'] +  '&nbsp;</td></tr></tbody></table></TD>');
+			}
+			else
+			{
+			document.write('<TD align="left"><table width=100%><tbody><tr><td width=35%>' + "HostName:" + lanhost_list[i]['HostName'] + "<br></td><td width=25%>" 
+			+  "MAC:" + lanhost_list[i]['MAC']  + "<br></td><td width=40%>" 
+			+ "IPV4:"  + lanhost_list[i]['IP']  + "<br></td></tr><tr><td>"
+			+ "RxBytes:"  + lanhost_list[i]['RxBytes']  + "<br></td><td>"
+			+ "TxBytes:"  + lanhost_list[i]['TxBytes']  + "<br></td><td>" 
+			+ "IPV6:" +  lanhost_list[i]['IPv6'] +  '&nbsp;</td></tr></tbody></table></TD>');
+			}
+
+			if(lanhost_list[i]['DhcpStatus'] == "1")
+			{
+				var arytemp = lanhost_list[i]['ExpireTime'].split(':');
+				if("0" != arytemp[0]){
+					document.write('<TD align="left">' + "租期剩余" + arytemp[0] + ":" + arytemp[1] + ":" + arytemp[2] + ":" + arytemp[3] + '&nbsp;</TD>');
+				}
+				else{
+					if(("0:0:0:0" == lanhost_list[i]['ExpireTime']) || ("0" == lanhost_list[i]['ExpireTime']))
+						document.write('<TD align="left">' + "租期已满" + '&nbsp;</TD>');
+					else{
+							document.write('<TD align="left">' + "租期剩余" + arytemp[1] + ":" + arytemp[2] + ":" + arytemp[3] + '&nbsp;</TD>');
+					}
+				}
+			}
+			else if(lanhost_list[i]['DhcpStatus'] == "2")
+			{
+				document.write('<TD align="left">' + '桥连接' + '&nbsp;</TD>');
+			}
+			else if(lanhost_list[i]['DhcpStatus'] == "3")
+			{
+				document.write('<TD align="left">' + '动态分配' + '&nbsp;</TD>');
+			}
+			else
+			{
+				document.write('<TD align="left">' + '静态分配' + '&nbsp;</TD>');
+			}
+
+			document.write('</TR>');
+		}			
+	}
+
+}
+</SCRIPT>
+
+
+        <div id="LAN接口信息_item">
+            <TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+              <TBODY>
+              <TR>
+                <TD>
+                  <div class="scroll-content">
+                  <TABLE id=internet_info name=internet_info class="statblList" border="1">
+                    <TBODY>
+                    <TR>
+                      <TD class=table_title width="20%">IP地址:</TD>
+                      <TD>192.0.2.1</TD></TR>
+ 
+                    <TR>
+                      <TD class=table_title>IPv6地址:</TD>
+                          <TD> fe80::1
+                            &nbsp;</TD>
+                        </TR>
+       
+                    <TR>
+                      <TD class=table_title>MAC地址:</TD>
+                      <TD>E0:21:FE:C0:C0:00 </TD></TR></TBODY></TABLE>
+                        </div><BR>
+
+               <div class="scroll-content">
+                 <TABLE id=lan_info name=lan_info class="tblList" border="1">
+                    <TBODY>
+                    	<TR>
+	                      <th colspan=4 class=table_title align=middle>以太网接口状态信息</th>
+	                      <th align=middle class=table_title>接收</th>
+	                      <th align=middle class=table_title>发送</th></TR>
+	                    <TR>
+	                      <TD class=table_title align=middle>端口号</TD>
+	                      <TD class=table_title align=middle>连接状态</TD>
+	                      <TD class=table_title align=middle>模式</TD>
+	                      <TD class=table_title align=middle>速率</TD>
+	                      <TD class=table_title align=middle>字节</TD>
+	                      <TD class=table_title align=middle>字节</TD>
+	                    </TR>
+<SCRIPT language=JavaScript type=text/javascript>
+                    		var lancntvalue = '{"data":[{"Port":"1", "LanState":"0", "TxBytes":"0", "RxBytes":"0", "Negoration":"Down", "Mode":""},{"Port":"2", "LanState":"0", "TxBytes":"0", "RxBytes":"0", "Negoration":"Down", "Mode":""},{"Port":"3", "LanState":"0", "TxBytes":"33186232", "RxBytes":"8049172", "Negoration":"Down", "Mode":""},{"Port":"4", "LanState":"0", "TxBytes":"327679", "RxBytes":"194384", "Negoration":"Down", "Mode":""},{"Port":"5", "LanState":"1", "TxBytes":"855125647", "RxBytes":"630968712", "Negoration":"2500M", "Mode":"Full"},{"Port":"6", "LanState":"1", "TxBytes":"959789560", "RxBytes":"18446744073147154563", "Negoration":"2500M", "Mode":"Full"}]}'
+                    		var rsp = JSON.parse(lancntvalue);
+												var lancnt_list = rsp.data;
+							
+                    		for( i = 0; i < lancnt_list.length; i++ )
+                    		
+                    		{
+
+                    			document.write('<TR align="center">');
+
+
+                                var fttr_olt_num = "2";
+                                var num_of_fttr_olt = 0;
+                                if (fttr_olt_num != "N/A")
+                                {
+                                    num_of_fttr_olt = parseInt(fttr_olt_num);
+                                }
+                                if ((num_of_fttr_olt > 0) && (lancnt_list[i]['Port'] > 4) && (lancnt_list[i]['Port'] <= (4 + num_of_fttr_olt)))
+                                {
+                                    document.write('<TD align="center">' + "LANPON"  + (lancnt_list[i]['Port']-4) + '&nbsp;</TD>');
+                                }
+                                else if (lancnt_list[i]['Port'] == 5) // LAN5口是PON
+                                {
+                                    document.write('<TD align="center">' + "LANPON1"  +  '&nbsp;</TD>');
+                                }
+                                else
+
+
+
+                    			document.write('<TD align="center">' + "LAN-" + lancnt_list[i]['Port'] +  '&nbsp;</TD>');
+                    			if(lancnt_list[i]['LanState'] == 1)
+                    				document.write('<TD align="center">' + "已连接" +  '&nbsp;</TD>');
+                    			else
+                    				document.write('<TD align="center">' + "未连接" +  '&nbsp;</TD>');	
+                    			if(lancnt_list[i]['Mode'] == "Full")
+                    				document.write('<TD align="center">' + "全双工" +  '&nbsp;</TD>');
+                    			else if(lancnt_list[i]['Mode'] == "Half")
+                    				document.write('<TD align="center">' + "半双工" +  '&nbsp;</TD>');
+                    			else 
+                    				document.write('<TD align="center">' + "-" +  '&nbsp;</TD>');
+                    			
+                    			if (lancnt_list[i]['Negoration'] == '2.5G')
+                    			{
+                    				lancnt_list[i]['Negoration'] = '2500M';
+                    			}
+                    			document.write('<TD align="center">' + lancnt_list[i]['Negoration'] +  '&nbsp;</TD>');
+                    			document.write('<TD align="center">' + lancnt_list[i]['RxBytes'] +  '&nbsp;</TD>');						
+                    			document.write('<TD align="center">' + lancnt_list[i]['TxBytes'] +  '&nbsp;</TD>');										
+                    			document.write('</TR>');
+												}
+</SCRIPT>	                                   
+</TBODY></TABLE></div><BR>
+
+
+                <div class="scroll-content">
+                  <TABLE id=NetPacketInfo_Ethe name=NetPacketInfo_Ethe class="tblList" border="1">
+                    <TBODY>
+                    <TR>
+                      <th class=table_title align=middle>接口</th>
+                      <th class=table_title align=middle colSpan=4>
+                        接收 </th>
+                      <th class=table_title align=middle colSpan=4>
+                        发送</th></TR>
+                    <TR>
+                      <TD class=table_title align=middle>&nbsp;</TD>
+                      <TD class=table_title align=middle>字节</TD>
+                      <TD class=table_title align=middle>包</TD>
+                      <TD class=table_title align=middle>错误</TD>
+                      <TD class=table_title align=middle>丢弃</TD>
+                      <TD class=table_title align=middle>字节</TD>
+                      <TD class=table_title align=middle>包</TD>
+                      <TD class=table_title align=middle>错误</TD>
+                      <TD class=table_title align=middle>丢弃</TD></TR>
+                    <SCRIPT language=javascript>
+					var TX_OCTETS_CNT = parseInt("33513911") +
+								parseInt("959789560");
+					var TX_PKT_CNT = parseInt("92653") +
+								parseInt("29612326");
+					var TX_CRCERR_CNT = parseInt("0") +
+								parseInt("0");
+					var TXMBI_ERRDROP_CNT = parseInt("0") +
+								parseInt("0");
+					var RX_OCTETS_CNT = parseInt("8243556") +
+								parseInt("3732570173");
+					var RX_PKT_CNT = parseInt("55419") +
+								parseInt("17598255");
+					var RX_CRCERR_CNT = parseInt("11") +
+								parseInt("0");
+					var RXMBI_ERRDROP_CNT = parseInt("0") +
+								parseInt("0");
+
+					document.writeln("<tr align=middle>");
+					document.writeln("<td class='table_title'>以太网"+"</td>");
+					document.writeln("<td>" + TX_OCTETS_CNT + "&nbsp;</td>");
+					document.writeln("<td>" + TX_PKT_CNT + "&nbsp;</td>");
+					document.writeln("<td>" + TX_CRCERR_CNT + "&nbsp;</td>");
+					document.writeln("<td>" + TXMBI_ERRDROP_CNT + "&nbsp;</td>");
+					document.writeln("<td>" + RX_OCTETS_CNT + "&nbsp;</td>");
+					document.writeln("<td>" + RX_PKT_CNT + "&nbsp;</td>");
+					document.writeln("<td>" + RX_CRCERR_CNT + "&nbsp;</td>");
+					document.writeln("<td>" + RXMBI_ERRDROP_CNT + "&nbsp;</td>");
+					document.writeln("</tr>");
+					if (curUserName != sptUserName)
+					{
+						document.all("NetPacketInfo_WLan").style.display = "none";
+						document.all("NetPacketInfo_Ethe").style.display = "none";
+					}
+					</SCRIPT>
+                    </TBODY></TABLE></div><BR>
+                <div class="scroll-content">
+                  <TABLE id=basic_info name=basic_info cellSpacing=0 class="tblList" border="1">
+                    <TBODY>
+                    <TR>
+					<th width="8%" class=table_title align=middle>端口信息</th>
+					<th width="70%" class=table_title align=middle>设备信息</th>
+					
+					<th width="14%" class=table_title align=middle>设备状态</th>
+					
+				</TR>
+				
+                    	<SCRIPT language=JavaScript type=text/javascript>
+                    		drawlanhostinfo(1);
+					</SCRIPT>
+                    </TBODY></TABLE></div>
+
+                    </TD>
+                </TR>             
+             </TBODY></TABLE></div>
+
+
+
+
+
+<div id="USB接口信息_item">
+            <TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+              <TBODY>
+              <TR>
+                <TD>
+                        <TABLE id=usb_info name=usb_info class="statblList" border="1">
+                          <TBODY>
+                          <TR>
+                            <TD class=table_title width="20%">USB设备:</TD>
+                            <TD>
+                              <SCRIPT language=JavaScript type=text/javascript>
+								if (usbvalue.length > 0)
+								{
+									document.write('已连接')
+								}
+								else
+								{
+									document.write('未连接')
+								}
+								</SCRIPT>
+                            </TD></TR>
+                          </TBODY></TABLE>
+                        </TD></TR></TBODY></TABLE>
+                    </div>
+ 
+ 
+ 
+ 
+
+             <div class='hide' id="下联光接口接入信息_item">
+             <script language=JavaScript type=text/javascript>
+function creat_lanpon_info_tab()
+{
+    var ponport_info = '{ "list": [ { "ponid": 1, "fec": "disable", "active": "enable", "autoregister": "enable", "status": "down", "tx_power": "2.92", "rx_power": "0.00", "temp": "49.61", "voltage": "3.28", "current": "39.31" }, { "ponid": 2, "fec": "disable", "active": "enable", "autoregister": "enable", "status": "up", "tx_power": "2.91", "rx_power": "-15.52", "temp": "48.94", "voltage": "3.21", "current": "34.60" } ] }';
+    var ret = JSON.parse(ponport_info);
+    var num = ret.list.length;
+
+    for (var i = 0; i < num; i++)
+    {
+        document.write('<TR align="middle">');
+        document.write('<TD>LANPON' + (i+1) + '</TD>');
+        document.write('<TD>GPON</TD>');    //下联PON类型固定为GPON
+        if (ret.list[i].fec == "enable")
+        {
+            document.write('<TD>启用</TD>');
+        }
+        else
+        {
+            document.write('<TD>关闭</TD>');
+        }
+
+        if (ret.list[i].active == "enable")
+        {
+            document.write('<TD>启用</TD>');
+        }
+        else
+        {
+            document.write('<TD>关闭</TD>');
+        }
+
+        if (ret.list[i].autoregister == "enable")
+        {
+            document.write('<TD>自动</TD>');
+        }
+        else
+        {
+            document.write('<TD>手动</TD>');
+        }
+
+        if (ret.list[i].status == "up")
+        {
+            document.write('<TD>已连接</TD>');
+        }
+        else
+        {
+            document.write('<TD>未连接</TD>');
+        }
+
+        document.write('<TD>' + ret.list[i].tx_power + '&nbsp;dBm</TD>');
+        document.write('<TD>' + ret.list[i].rx_power + '&nbsp;dBm</TD>');
+        document.write('<TD>' + ret.list[i].temp + '&nbsp;℃</TD>');
+        document.write('<TD>' + ret.list[i].current + '&nbsp;mA</TD>');
+        document.write('<TD>' + ret.list[i].voltage + '&nbsp;V</TD>');
+        document.write('</TR>');
+    }
+}
+             </script>
+                  <TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+                    <TR>
+                      <TD>
+                       <div class="scroll-content">
+                       <TABLE id=lanpon_info name=lanpon_info cellSpacing=0 class="tblList" border="1">
+                        <TBODY>
+                          <TR>
+                            <TH class=table_title align="middle" width="8%">端口</TH>
+                            <TH class=table_title align="middle" width="8%">PON类型</TH>
+                            <TH class=table_title align="middle" width="7%">FEC使能</TH>
+                            <TH class=table_title align="middle" width="8%">端口使能</TH>
+                            <TH class=table_title align="middle" width="13%">注册方式</TH>
+                            <TH class=table_title align="middle" width="13%">连接状态</TH>
+                            <TH class=table_title align="middle" width="9%">发射光功率</TH>
+                            <TH class=table_title align="middle" width="9%">接收光功率</TH>
+                            <TH class=table_title align="middle" width="9%">光模块温度</TH>
+                            <TH class=table_title align="middle" width="8%">电流</TH>
+                            <TH class=table_title align="middle" width="8%">电压</TH>
+                          </TR>
+                          <script language=JavaScript type=text/javascript>
+                          creat_lanpon_info_tab();
+                          </script>
+                        </TBODY>
+                       </TABLE>
+                       </div>
+                      </TD>
+                    </TR>
+                  </TABLE>
+                </div>
+
+
+<!--
+
+<script language=JavaScript type=text/javascript>
+function show_LanPon_info(idx)
+{
+	console.log(idx);
+	location.replace('sta-showLanPonInfo.asp?Index=' + idx);
+}
+
+function Creat_LanPon_info_table()
+{
+    var xmlhttp;
+    var cmd = '/cgi-bin/LanPonInfo.cgi';
+	var maxnum = 128;
+	if (window.XMLHttpRequest)
+	{
+		xmlhttp=new XMLHttpRequest();
+	}
+	else
+	{
+		xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+	}
+
+	xmlhttp.onreadystatechange=function()
+	{
+			if (xmlhttp.readyState==4 && xmlhttp.status==200)
+			{
+				var returnStr=String(xmlhttp.responseText);
+				var TBODY = document.getElementById("LanPon_info_tab");
+				var TR = document.createElement("TR");
+				var TD = document.createElement("TD");
+				var tab = document.createElement("TABLE");
+				var br= document.createElement("BR");
+				tab.setAttribute("cellSpacing","0");
+				tab.setAttribute("cellPadding","3");
+				tab.setAttribute("width","100%");
+				tab.setAttribute("class","table_data");
+				tab.setAttribute("border","1");
+				var tbody = document.createElement("TBODY");
+				var entry_id = 0;
+				returnStr.trim().split('\n').forEach(function(value, index) {
+					console.log(value);
+					if(index >= 0){
+						var tr = document.createElement("TR");
+						var td1 = document.createElement("TD");
+						var td2 = document.createElement("TD");
+						td1.setAttribute("width","13%");
+						td1.setAttribute("align","center");
+						td2.setAttribute("width","13%");
+						td2.setAttribute("align","center");
+						var btn = document.createElement("input");
+						btn.setAttribute("type","button");
+						btn.setAttribute("value","详细信息");
+						value.trim().split(' ,').forEach(function(va,i){
+							if(index == 0) {
+								var td = document.createElement("TD");
+								if(i == 0)
+								{
+									td.setAttribute("width","40%");
+									td.setAttribute("class","table_title");
+									td.setAttribute("align","center");
+								}
+								else
+								{
+									td.setAttribute("width","60%");
+									td.setAttribute("align","center");
+								}
+								td.innerHTML = va;
+								tr.appendChild(td);
+							}
+							else {
+								var td = document.createElement("TD");
+								if(index == 1) {
+									td.setAttribute("class","table_title");
+								}
+								if(i == 0) {
+									td.setAttribute("width","5%");
+								}
+								else if(i == 1) {
+									td.setAttribute("width","10%");
+									if (index != 1)
+									{
+										if (va == "离线")
+											td.setAttribute("style","color:red;border-color:#000000");
+										else
+											td.setAttribute("style","color:green;border-color:#000000");
+									}
+								}
+								else {
+									td.setAttribute("width","13%");
+								}
+
+								if (index > 1 && i == 0)
+								{
+									if (va == maxnum)
+									{
+										btn.setAttribute("disabled","true");
+									}
+									td.innerHTML = index - 1;
+									entry_id = va;
+								}
+								else
+								{
+									td.innerHTML = va;
+								}
+								td.setAttribute("align","center");
+								tr.appendChild(td);
+							}
+						})
+						if(index == 1) {
+							td1.setAttribute("class","table_title");
+							tr.appendChild(td1);
+						}
+						else if(index > 1) {
+							btn.setAttribute("onclick","show_LanPon_info("+ entry_id +")");
+							btn.setAttribute("value","详细信息");
+							td2.appendChild(btn);
+							tr.appendChild(td2);
+						}
+						if(index == 0) {
+							var tab1 = document.createElement("TABLE");
+							tab1.setAttribute("cellSpacing","0");
+							tab1.setAttribute("cellPadding","3");
+							tab1.setAttribute("width","100%");
+							tab1.setAttribute("class","table_data");
+							tab1.setAttribute("border","1");
+							var tbody1 = document.createElement("TBODY");
+							tbody1.appendChild(tr);
+							tab1.appendChild(tbody1);
+							TD.appendChild(tab1);
+							TD.appendChild(br);
+						}
+						else {
+							tbody.appendChild(tr);
+							tab.appendChild(tbody);
+							TD.appendChild(tab);
+						}
+					}
+				})
+				TR.appendChild(TD);
+				TBODY.appendChild(TR);
+			}
+	}
+	xmlhttp.open('get',cmd,true);
+	xmlhttp.send();
+}
+</SCRIPT>
+          <div class='hide' id="子设备连接状态_item">
+                  <TABLE cellSpacing=0 cellPadding=0 width="100%" border=0 style="word-break:break-all; word-wrap:break-word;">
+                    <TBODY id="LanPon_info_tab" width="100%">
+						  <script language=JavaScript type=text/javascript>
+						  Creat_LanPon_info_table();
+						  </script>
+                          </TBODY></TABLE></div>
+
+-->
+				</div>
+			</div>
+		</div>
+		</div>
+		</div>
+	</div>
+<!-- copyright bottom -->
+    <footer class="footer d-print-none sticky-bottom">
+      <div class="container-xl">
+        <div class="row row-deck row-cards">
+          <script language=JavaScript type=text/javascript>
+          
+          </script>
+        </div>
+      </div>
+    </footer>
+
+</div>
+</div>
+</BODY>
+</HTML>

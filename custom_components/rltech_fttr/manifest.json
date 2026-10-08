@@ -1,0 +1,25 @@
+{
+  "domain": "rltech_fttr",
+  "name": "RLTech FTTR",
+  "codeowners": [
+    "@hmsta"
+  ],
+  "config_flow": true,
+  "dependencies": [
+    "dhcp",
+    "frontend",
+    "http",
+    "lovelace",
+    "panel_custom"
+  ],
+  "documentation": "https://github.com/RLTechGlobal/HomeAssistant-RLTech",
+  "iot_class": "local_polling",
+  "issue_tracker": "https://github.com/RLTechGlobal/HomeAssistant-RLTech/issues",
+  "loggers": [
+    "aiooui"
+  ],
+  "requirements": [
+    "aiooui==0.1.9"
+  ],
+  "version": "0.3.0"
+}

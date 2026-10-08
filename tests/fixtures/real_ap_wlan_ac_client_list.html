@@ -1,0 +1,626 @@
+<!--
+REAL SAMPLE (sanitized) - RLTech AC 8080 Web UI, captured 2026-09-29 (phase 0) from WAN http://<AC-WAN>:8080.
+Source page: /cgi-bin/ap_wlan_ac_client_list.asp   Capture: POST, same fields as fetch_station_page
+Firmware: AC hw V0.1.0 / sw V0.0.30 (lan_num=6, lan_pon_num=2); APs FS8820A V0.1.21, RL820GW-AX3 V0.0.51.
+Page content is byte-for-byte what boa returned except for these substitutions (same rules in every real_* file):
+  - Vendor OUI E0:21:FE kept; the device-specific (NIC) part of each MAC is replaced:
+      AP-A (FS8820A)      -> E0:21:FE:A0:A0:0x  (base MAC ..:00, BSSIDs ..:04/..:05)
+      AP-B (RL820GW-AX3)  -> E0:21:FE:B0:B0:0x
+      AC (LAN ..:00, WAN ..:02) -> E0:21:FE:C0:C0:0x
+    The same NIC substitution is applied everywhere the MAC is embedded: PON SN (RLGMFEA0A000 /
+    RLGMFEB0B000, sn_address RLGM-FEA0A000), DevName/HostName (FTTRSub_A0A000 / FTTRSub_B0B000),
+    EUI-64 IPv6 (...:fea0:a000). Upper/lower case and colon/no-colon style of the original are kept.
+  - Other (client) MACs -> 02:00:00:00:00:NN, numbered in first-seen order across all real_* files.
+  - DevSN: AP-A -> RLGM00000000001, AP-B -> RL00000000002; AC serial -> RL0000000000003 (lengths kept).
+  - IPv4: AC LAN /24 -> 192.0.2.X, AC WAN /24 -> 198.51.100.X, AP-A mgmt /24 -> 203.0.113.X
+    (last octet kept, so AP-B = 192.0.2.10, AP-A = 192.0.2.4, AC LAN = 192.0.2.1). Masks kept.
+  - Client IPv6 link-local (other than fe80::1) -> fe80::2:0:0:NN.
+  - UUIDs (AP Fingerprint, task SeqId) -> 00000000-0000-4000-8000-0000000000NN.
+  - Client host names -> client-host-NN; SSID -> TEST_SSID / TEST_SSID_5G.
+  - No ecntToken, cookie or password appears in these pages (checked); nothing else was removed.
+-->
+<HTML>
+
+<HEAD>
+    <META http-equiv=Content-Language content=zh-cn>
+    <META http-equiv=Content-Type content="text/html; charset=utf8">
+    <LINK href="/JS/stylemain.css" type=text/css rel=stylesheet>
+    <LINK href="/JS/ui.css" type=text/css rel=stylesheet>
+    <link href="/JS/tabler.min.css" type=text/css rel=stylesheet>
+    <link href="/bootstrap-4.6.2/css/bootstrap.min.css" type=text/css rel=stylesheet>
+    <link href="/bootstrap-4.6.2/font/bootstrap-icons.css" type=text/css rel=stylesheet>
+    <SCRIPT language=javascript src="/JS/util.js"></SCRIPT>
+    <SCRIPT language=javascript src="/JS/json2.js"></SCRIPT>
+    <SCRIPT language=javascript src="/JS/jquery.js"></SCRIPT>
+    <SCRIPT language=javascript src="/JS/tabler.min.js"></SCRIPT>
+    <SCRIPT language=javascript src="/JS/jquery-1.10.2.min.js"></SCRIPT>
+    <script language=javascript src="/bootstrap-4.6.2/js/bootstrap.bundle.min.js"></script>
+    <META content="MSHTML 6.00.6000.16809" name=GENERATOR>
+</HEAD>
+
+<BODY>
+
+
+    <script language="JavaScript" type="text/javascript">
+        var STA_manage = '{ "respCode":0, "pageIdx":1, "pageLines":10000, "filterKey":"Mac", "filterValue":"", "total":5, "count":5, "data":{ "list":[ { "ID":"425", "Mac":"020000000001", "IP":"192.0.2.2", "HostName":"client-host-01", "SSID":"TEST_SSID", "APMac":"E021FEB0B000", "RSSI":"-55", "RxRate":"0", "TxRate":"0", "UpTime":"410988", "Channel":"9", "Bandwidth":"2", "Vlan":"150", "Alias":"", "Status":"1", "RxNegoRate":"1", "TxNegoRate":"1", "ToTalcnt":"1568.38", "UpDateTime":"1790679864" }, { "ID":"629", "Mac":"020000000002", "IP":"192.0.2.8", "HostName":"N/A", "SSID":"TEST_SSID_5G", "APMac":"E021FEB0B000", "RSSI":"-54", "RxRate":"0", "TxRate":"0", "UpTime":"23099", "Channel":"52", "Bandwidth":"5", "Vlan":"0", "Alias":"", "Status":"1", "RxNegoRate":"1", "TxNegoRate":"1080", "ToTalcnt":"1578.16", "UpDateTime":"1790679864" }, { "ID":"636", "Mac":"020000000003", "IP":"192.0.2.11", "HostName":"client-host-02", "SSID":"TEST_SSID_5G", "APMac":"E021FEA0A000", "RSSI":"-53", "RxRate":"0", "TxRate":"0", "UpTime":"2779", "Channel":"36", "Bandwidth":"5", "Vlan":"150", "Alias":"", "Status":"1", "RxNegoRate":"1", "TxNegoRate":"2401", "ToTalcnt":"3204.50", "UpDateTime":"1790679841" }, { "ID":"642", "Mac":"020000000004", "IP":"192.0.2.16", "HostName":"client-host-03", "SSID":"TEST_SSID_5G", "APMac":"E021FEB0B000", "RSSI":"-43", "RxRate":"0", "TxRate":"0", "UpTime":"1260", "Channel":"52", "Bandwidth":"5", "Vlan":"0", "Alias":"", "Status":"1", "RxNegoRate":"1", "TxNegoRate":"2161", "ToTalcnt":"2501.08", "UpDateTime":"1790679864" }, { "ID":"643", "Mac":"020000000005", "IP":"192.0.2.5", "HostName":"N/A", "SSID":"TEST_SSID", "APMac":"E021FEB0B000", "RSSI":"-45", "RxRate":"0", "TxRate":"0", "UpTime":"752", "Channel":"9", "Bandwidth":"2", "Vlan":"150", "Alias":"", "Status":"1", "RxNegoRate":"2", "TxNegoRate":"6", "ToTalcnt":"22.17", "UpDateTime":"1790679864" } ] } } ';
+        var ret = JSON.parse(STA_manage);
+        if ( ret.respCode == "3" )
+        {
+            var hang_num = 10; //当前每页的行数
+            var num = 0; //当前总共有多少页
+            ret.total = 0 ;
+        }
+        else
+        {
+            var hang_num = ret.pageLines; //当前每页的行数
+            var num = Math.ceil(ret.total / hang_num); //当前总共有多少页
+            var FilterValue_From_Json = ret.filterValue;    //解析是否有过滤值
+            console.log('FilterValue_From_Json', FilterValue_From_Json);
+        }
+
+
+
+        function Set_refresh() {
+            top.Content_time_s = document.getElementById("auto_refresh").value ;
+            var time = top.Content_time_s
+            if (time > 4 && time < 61) 
+            {
+
+                setTimeout(function () {gopage()}, time * 1000);
+
+            }
+            else
+                return;
+        }
+
+        function filtration() {
+            document.ConfigForm.pageidx_rows.value = 1 + ',' + 10;
+            search_filterKey();
+            if (true == setEBooValueCookie_utf8(document.ConfigForm))
+                document.ConfigForm.submit()
+        }
+
+        function gopage() {
+            var pages = document.getElementById("txtCurPageIndex").value;//输入页码
+            var pages_hang = document.getElementById("txtMaxRows").value;//输入行数
+            var total_info = pages_hang * pages - pages_hang;
+
+            if (total_info < ret.total || pages == 1) {
+                ret.pageLines = parseInt(pages_hang); //修改后的每页的行数
+                ret.pageIdx = parseInt(pages);  //修改后的当前所在的页码
+                document.ConfigForm.txtMaxRows.value = pages_hang;
+                document.ConfigForm.txtCurPageIndex.value = pages;
+
+                // 把页码和行数用,拼接
+                document.ConfigForm.pageidx_rows.value = pages + ',' + pages_hang;
+                search_filterKey();
+
+                if (true == setEBooValueCookie_utf8(document.ConfigForm))
+                    document.ConfigForm.submit()
+            }
+            else {
+                alert("请输入正确的行数与页码")
+            }
+        }
+
+        function firstpage() {
+            var pages_hang = document.getElementById("txtMaxRows").value;//输入行数
+
+                document.ConfigForm.pageidx_rows.value = 1 + ',' + pages_hang;
+                search_filterKey();
+            if (true == setEBooValueCookie_utf8(document.ConfigForm))
+                document.ConfigForm.submit()
+        }
+        function pageup1() {
+            var pages = parseInt(document.getElementById("txtCurPageIndex").value) - 1;
+            var pages_hang = document.getElementById("txtMaxRows").value;//输入行数
+
+            if (pages < 1)
+                alert("目前已经是首页");
+            else {
+                document.ConfigForm.pageidx_rows.value = pages + ',' + pages_hang;
+                search_filterKey();
+                if (true == setEBooValueCookie_utf8(document.ConfigForm))
+                    document.ConfigForm.submit()
+            }
+
+
+        }
+        function pagedown1() {
+            var pages = parseInt(document.getElementById("txtCurPageIndex").value) + 1;
+            var pages_total = num;
+            var pages_hang = document.getElementById("txtMaxRows").value;//输入行数
+
+            if (pages > pages_total)
+                alert("目前已经是末页");
+            else {
+                document.ConfigForm.pageidx_rows.value = pages + ',' + pages_hang;
+                search_filterKey();
+                if (true == setEBooValueCookie_utf8(document.ConfigForm))
+                    document.ConfigForm.submit()
+            }
+        }
+        function lastpage() {
+            var pages_hang = document.getElementById("txtMaxRows").value;//输入行数
+
+            document.ConfigForm.pageidx_rows.value = num + ',' + pages_hang;
+            search_filterKey();
+
+            if (true == setEBooValueCookie_utf8(document.ConfigForm))
+                document.ConfigForm.submit()
+        }
+
+        function changekey() {
+            top.Content_filter_s = document.getElementById("search_item").value;
+
+            var m='';
+            document.getElementById("keywords").innerHTML = m;
+            
+            if ( top.Content_filter_s == "10" )
+            {
+                m+='<select style="display: inline;" class="form-select" name="search_condition" id="search_condition" >';
+                m+='<option value=0>'+'离线'+'</option>';
+                m+='<option value=1>'+'在线'+'</option>';
+                m+='<option value=2>'+'全部'+'</option>';
+                m+='</select>';
+            }
+            else
+            {
+                m+='<input maxlength="128" name="search_condition" id="search_condition" value="" >'
+            }
+            
+            document.getElementById("keywords").innerHTML = m;
+            return 0;
+        }
+
+        function search_filterKey() {
+            var filter_key = new Array("Mac", "IP", "HostName", "SSID", "APMac", "RSSI", "RxRate", "TxRate","UpTime", "Alias", "Status");
+            var select_filterkey = document.getElementById("search_item").value;
+            var select_filtervalue = document.getElementById("search_condition").value;
+
+            if ( select_filterkey == "10" && select_filtervalue == "2")
+            {
+                return 0 ;
+            }
+
+            if ( select_filtervalue != null)
+            {
+                if ( select_filterkey == "0" || select_filterkey == "4" )
+                    select_filtervalue = select_filtervalue.replaceAll(":","");
+
+                document.ConfigForm.filterkey_value.value = filter_key[select_filterkey] + ',' + select_filtervalue;
+                top.Content_filter_s_condition = document.getElementById("search_condition").value;
+            }
+            else
+                return 0 ;
+        }
+
+        function show_all() {
+            var pages = document.getElementById("txtCurPageIndex").value;//输入页码
+            var pages_hang = document.getElementById("txtMaxRows").value;//输入行数
+            var total_info = pages_hang * pages - pages_hang;
+
+            if (total_info < ret.total || pages == 1)
+            {
+                ret.pageLines = parseInt(pages_hang); //修改后的每页的行数
+                ret.pageIdx = parseInt(pages);  //修改后的当前所在的页码
+                document.ConfigForm.txtMaxRows.value = pages_hang;
+                document.ConfigForm.txtCurPageIndex.value = pages;
+
+                // 把页码和行数用,拼接
+                document.ConfigForm.pageidx_rows.value = pages + ',' + pages_hang;
+               // top.Content_filter_s_condition = 0;
+                top.Content_filter_s = 0 ;
+
+                if (true == setEBooValueCookie_utf8(document.ConfigForm))
+                    document.ConfigForm.submit()
+            }
+            else 
+            {
+                alert("请输入正确的行数与页码")
+            }
+        }
+
+        function getrefresh() {
+            gopage();
+        }
+    </script>
+
+
+
+    <FORM name=ConfigForm id='ConfigForm' action="/cgi-bin/ap_wlan_ac_client_list.asp" method="post">
+            <div>
+                <table>
+                    <tbody>
+                        <TR>
+                            <TD colspan=3 style="width:480px;padding:10px 10px;margin:0 0 15px 0;font-size: 16;">
+                                &nbsp;&nbsp;无线网络接入客户端列表:</TD>
+                        </TR>
+                    </tbody>
+                </table>
+            </div><br>
+
+            <div>
+                <table cellspacing=0 cellPadding=0 border=0 width=100% align="center">
+                    <tbody>
+                        <TR id=search_index class="textCell">
+                            <input type=hidden name="pageidx_rows" id="pageidx_rows" value=0>
+                            <input type=hidden name="filterkey_value" id="filterkey_value" >
+                            <TD colSpan=3 align="left">按关键字过滤：
+                                <select style="display: inline;" class="form-select" name=search_item id=search_item onchange=changekey()>
+                                    <SCRIPT language=JavaScript type=text/javascript>
+                                        var filter_name  = new Array('MAC地址','IP地址','主机名','连接SSID','AP的MAC地址','信号强度','发送速率','接收速率','连接时间','备注', "状态");
+                                        for (i = 0; i < 11; i++)
+                                        {
+                                            if( i == top.Content_filter_s)
+                                                document.write('<option value=' + i + ' selected>' + filter_name[i] + '</option>');
+                                            else
+                                                document.write('<option value=' + i + '>' + filter_name[i] + '</option>');
+                                        }
+                                    </SCRIPT>
+                                </select>
+                                关键字：
+                                <span id=keywords>
+                                <script>
+                                    var i = 0 ;
+                                    if ( top.Content_filter_s == "10" )
+                                    {
+                                        document.write('<select style="display: inline;" class="form-select" name="search_condition" id="search_condition" >');
+                                        
+                                            if ( FilterValue_From_Json == "0" )
+                                            {
+                                                document.write('<option value=0 selected>'+'离线'+'</option>');
+                                                document.write('<option value=1 >'+'在线'+'</option>');
+                                                document.write('<option value=2 >'+'全部'+'</option>');
+                                            }
+                                            else if ( FilterValue_From_Json == "1" )
+                                            {
+                                                document.write('<option value=0 >'+'离线'+'</option>');
+                                                document.write('<option value=1 selected>'+'在线'+'</option>');
+                                                document.write('<option value=2 >'+'全部'+'</option>');
+                                            }
+                                            else
+                                            {
+                                                document.write('<option value=0 >'+'离线'+'</option>');
+                                                document.write('<option value=1 >'+'在线'+'</option>');
+                                                document.write('<option value=2 selected>'+'全部'+'</option>');
+                                            }
+                                        document.write('</select>');
+                                    }
+                                    else
+                                    {
+                                    if ( ret.respCode == "3" )
+                                        document.write( '<input maxlength="128" name="search_condition" id="search_condition" value="" >');
+                                    else
+                                        document.write( '<input maxlength="128" name="search_condition" id="search_condition" value="' + FilterValue_From_Json + '" >');
+                                    }
+                                </script>
+                                </span>
+
+                                <INPUT type=button name=search_start id=search_start class="BtnAdd btn btn-dark btn-pill" value="查询" onClick=filtration()>
+                                <INPUT type=button name=search_stop id=search_stop class="BtnAdd btn btn-dark btn-pill" value="显示全部" onClick=show_all()>
+                                &nbsp;&nbsp;自动刷新(秒)：
+                                <select style="display: inline;" class="form-select" name=auto_refresh id=auto_refresh onchange=Set_refresh()>
+                                    <SCRIPT language=JavaScript type=text/javascript>
+                        var time ;
+                        document.write('<option value="0">' +'禁止'+ '</option>');
+                        for (i = 1; i < 13; i++)
+                        {
+                            time = i*5;
+                            if( time == top.Content_time_s)
+                                document.write('<option value=' + time + ' selected>' + time + '</option>');
+                            else
+                                document.write('<option value=' + time + '>' + time + '</option>');
+                        
+                        }
+                        </SCRIPT>
+                                </select>
+                            </TD>
+                        </TR>
+                    </tbody>
+                </table>
+            </div><br>
+    <div style="overflow-y: auto; max-height: 700px;">
+        <table cellspacing=0 cellPadding=6 border=1 width=100% align="center" border="4" style="collapse;border-top: 0px; border-bottom: 0;">
+            <thead>
+                <tr>
+                    <th style="position: sticky; top: -1; text-align: center;" class=table_title align=middle>序号</th>
+                    <th style="position: sticky; top: -1; text-align: center;" class=table_title align=middle>MAC地址</th>
+                    <th style="position: sticky; top: -1; text-align: center;" class=table_title align=middle>IP地址</th>
+                    <th style="position: sticky; top: -1; text-align: center;" class=table_title align=middle>主机名</th>
+                    <th style="position: sticky; top: -1; text-align: center;" class=table_title align=middle>连接SSID</th>
+                    <th style="position: sticky; top: -1; text-align: center;" class=table_title align=middle>AP的MAC地址</th>
+                    <th style="position: sticky; top: -1; text-align: center;" class=table_title align=middle>信号强度</th>
+                    <th style="position: sticky; top: -1; text-align: center;" class=table_title align=middle>发送速率</th>
+                    <th style="position: sticky; top: -1; text-align: center;" class=table_title align=middle>接收速率</th>
+                    <th style="position: sticky; top: -1; text-align: center;" class=table_title align=middle>连接时间</th>
+                  <!--  <td class=table_title align=middle>&nbsp; 备注 &nbsp;</td>-->
+                    <th style="position: sticky; top: -1; text-align: center;" class=table_title align=middle>状态</th>
+                    <th style="position: sticky; top: -1; text-align: center;" class=table_title align=middle>详细信息</th>
+                </tr>
+            </thead>
+            <tbody>
+                <SCRIPT language=JavaScript type=text/javascript>
+                    if ( ret.respCode == "3" )
+                    {
+                        var hang_num = 10 ; //当前每页的行数
+                        var pages_now = 1 ; //当前所在的页码
+                        var length_total = 0 ;
+                    }
+                    else
+                    {
+                        var hang_num = ret.pageLines ; //当前每页的行数
+                        var pages_now = ret.pageIdx ; //当前所在的页码
+                        var length_total = ret.data.list.length ;
+                    }
+                    var sta_idx = hang_num * (pages_now - 1);
+
+                    for(i = 0; i < length_total; i++)
+                    {
+                            j=i+1;
+                            var row = 'row'+j+'';
+
+                            sta_idx++;
+                            document.write('<TR>');
+                            document.write('<TD align=middle>' + sta_idx + '</TD>');
+                            document.write('<TD align=middle>' + ret.data.list[i].Mac.replace(/(.{2})(?=.)/g,"$1:") + '</TD>');
+                            document.write('<TD align=middle>' + ret.data.list[i].IP + '</TD>');
+                            document.write('<TD align=middle>' + ret.data.list[i].HostName + '</TD>');
+                            document.write('<TD align=middle>' + ret.data.list[i].SSID + '</TD>');
+                            document.write('<TD align=middle>' + ret.data.list[i].APMac.replace(/(.{2})(?=.)/g,"$1:") + '</TD>');
+                            document.write('<TD align=middle>' + ret.data.list[i].RSSI + '</TD>');
+                            document.write('<TD align=middle>' + ret.data.list[i].TxRate + '</TD>');
+                            document.write('<TD align=middle>' + ret.data.list[i].RxRate + '</TD>');
+                            document.write('<TD align=middle>' + ret.data.list[i].UpTime + '</TD>');
+							document.write('<TD align=middle>' + ret.data.list[i].Status + '</TD>');
+                         //   document.write('<TD align=middle>' + ret.data.list[i].Alias + '</TD>');
+                            document.write('<TD align=middle>');
+                            document.write('<a width=50 value="'+i+'" href="javascript:void(0)" onclick="displayWindow(this)">'+'详情'+'</a>');
+                            document.write('</TD>');
+                            document.write('</TR>');
+                    }
+            </script>
+            </tbody>
+        </table>
+    </div><br>
+        <table cellspacing=0 cellPadding=0 border=0 width=100% align="center">
+            <tbody>
+                <tr>
+                    <script language=JavaScript type=text/javascript>
+            if ( ret.respCode == "3" || ret == null )
+            {
+                var hang_num = 10 ;           //目前显示一页的行数
+                var page_now = 1 ;             //目前页面
+                var page_total = 0 ;                   //总共页码
+                var info_total = 0 ;             //总共记录
+            }
+            else
+            {
+                var hang_num = ret.pageLines ;           //目前显示一页的行数
+                var page_now = ret.pageIdx ;             //目前页面
+                var page_total = num ;                   //总共页码
+                var info_total = ret.total ;             //总共记录
+            }
+            document.write('<TD noWrap="noWrap" align="right">');
+            document.write('<span>'+'第 '+page_now+' 页'+'</span>');
+            document.write('<span>/'+'共 '+page_total+' 页, '+'</span>');
+            document.write('<span>'+'共 '+info_total+' 条记录. '+'</span>');
+            document.write('<span>'+'每页');
+            document.write('<input id="txtMaxRows" name="txtMaxRows" type="text" maxlength="4" size="4" style="TEXT-ALIGN:center;width: 62;height: 20;" value = '+hang_num+' >');
+            document.write('行'+'</span>');
+            document.write('</TD>');
+        </script>
+                    <td align="right" style="width:20px" valign="middle"><IMG name="imgFirst" id="imgFirst" title="首页"
+                            src="/img/first.gif" onclick=firstpage()></td>
+                    <td align="right" style="width:20px" valign="middle"><IMG name="imgPrev" id="imgPrev" title="上一页"
+                            src="/img/prev.gif" onclick=pageup1()></td>
+                    <td>&nbsp;</td>
+                    <td align="right" style="width:20px" valign="middle">
+                        <SCRIPT language=JavaScript type=text/javascript>
+                            document.write('<input name="txtCurPageIndex" type="text"  id="txtCurPageIndex" maxlength="4" size="4" style="TEXT-ALIGN:center;width: 62;height: 20;" value = '+page_now+' >');
+                        </SCRIPT>
+                    </td>
+                    <td align="right" style="width:20px" valign="middle">
+                        <input type="button" name="btnGoPage" value="Go" id="btnGoPage" onclick="gopage()" class="BtnAdd btn btn-dark btn-pill">
+                    </td>
+                    <td align="right" style="width:20px" valign="middle"> <IMG name="imgNext" id="imgNext" title="下一页"
+                            src="/img/next.gif" onclick=pagedown1()></td>
+                    <td align="right" style="width:20px" valign="middle"><IMG name="imgLast" id="imgLast" title="尾页"
+                            src="/img/last.gif" onclick=lastpage()></td>
+                  <!--  <TD align=left valign=top width=10>
+                        <INPUT type=button name=op_del id=op_del class=button value=释放 onclick=op_delete()>
+                    </td>-->
+                    <td>&nbsp;</td>
+                    <TD align=left valign=top width=10>
+                        <INPUT type=button name=op_refresh id=op_refresh class="BtnAdd btn btn-dark btn-pill" value="刷新" onclick=getrefresh()>
+                    </td>
+                </tr>
+
+
+
+
+
+            </tbody>
+        </table>
+        <input type="hidden" name="rebootToChangeMode" value="Yes">
+    </FORM>
+    <!--悬浮窗口-->
+
+    <div id="window" class="window_css">
+        <div style="text-align:right; line-height:10px;">
+            <a href="javascript:void(0)" onclick="hideWindow()">关闭</a>
+            <table id=details name=details style="font-size: 16px;text-align:left;">
+                <script>
+
+                    /*当点击调用此方法后,将悬浮窗口显示出来,背景变暗*/
+                    function displayWindow(abc) {
+                        /*悬浮窗口的显示,需要将display变成block*/
+                        document.getElementById("window").style.display = "block";
+                        /*将背景变暗*/
+                        document.getElementById("shadow").style.display = "block";
+                        var value = abc.getAttribute("value");
+                        console.log('value', value)
+                        var m = '';
+                        tt = value;
+
+                        var time = parseInt(ret.data.list[tt].UpTime);
+                        var second = time%60;
+                        var minute = Math.floor(time%3600/60);
+                        var hour = Math.floor(time%(24*3600)/3600);
+                        var day = Math.floor(time/(24*3600));
+                        var online_time = day +' 日 ' + hour + ' 时 ' + minute + ' 分 ' + second + ' 秒';
+
+                        m +='<tr>';
+                        m +='<td width=100></td>';
+                        m +='<td width=200>MAC地址:</td>';
+                        m +='<td width=150></td>';
+                        m +='<td width=200>' + ret.data.list[tt].Mac + '</td>';
+                        m +='</tr>';
+                        m +='<tr>';
+                        m +='<td width=100></td>';
+                        m +='<td width=100>IP地址:</td>';
+                        m +='<td width=150></td>';
+                        m +='<td width=200>' + ret.data.list[tt].IP + '</td>';
+                        m +='</tr>';
+                        m +='<tr>';
+                        m +='<td width=100></td>';
+                        m +='<td width=100>主机名:</td>';
+                        m +='<td width=150></td>';
+                        m +='<td width=200>' + ret.data.list[tt].HostName + '</td>';
+                        m +='</tr>';
+                        m +='<tr>';
+                        m +='<td width=100></td>';
+                        m +='<td width=100>连接SSID:</td>';
+                        m +='<td width=150></td>';
+                        m +='<td width=200>' + ret.data.list[tt].SSID + '</td>';
+                        m +='</tr>';
+                        m +='<tr>';
+                        m +='<td width=100></td>';
+                        m +='<td width=100>AP的MAC地址:</td>';
+                        m +='<td width=150></td>';
+                        m +='<td width=200>' + ret.data.list[tt].APMac + '</td>';
+                        m +='</tr>';
+                        m +='<tr>';
+                        m +='<td width=100></td>';
+                        m +='<td width=100>VLAN:</td>';
+                        m +='<td width=150></td>';
+                        m +='<td width=200>' + ret.data.list[tt].Vlan + '</td>';
+                        m +='</tr>';
+                        m +='<tr>';
+                        m +='<td width=100></td>';
+                        m +='<td width=100>信号强度:</td>';
+                        m +='<td width=150></td>';
+                        m +='<td width=200>' + ret.data.list[tt].RSSI + ' dBm</td>';
+                        m +='</tr>';
+                        m +='<tr>';
+                        m +='<td width=100></td>';
+                        m +='<td width=100>信道:</td>';
+                        m +='<td width=150></td>';
+                        m +='<td width=200>' + ret.data.list[tt].Channel + '</td>';
+                        m +='</tr>';
+                        m +='<tr>';
+                        m +='<td width=100></td>';
+                        m +='<td width=100>频宽:</td>';
+                        m +='<td width=150></td>';
+                        switch (ret.data.list[tt].Bandwidth) {
+                            case "1":
+                                m +='<td width=200>' + "20 MHz" + '</td>';
+                                break;
+
+                            case "2":
+                                m +='<td width=200>' + "40 MHz" + '</td>';
+                                break;
+
+                            case "3":
+                                m +='<td width=200>' + "20/40 MHz" + '</td>';
+                                break;
+
+                            case "4":
+                                m +='<td width=200>' + "20/40/80 MHz" + '</td>';
+                                break;
+
+                            case "5":
+                                m +='<td width=200>' + "20/40/80/160 MHz" + '</td>';
+                                break;
+
+                            default:
+                                m +='<td width=200>' + "20 MHz" + '</td>';
+                                break;
+                        }
+                        m +='</tr>';
+                        m +='<tr>';
+                        m +='<td width=100></td>';
+                        m +='<td width=100>发送速率:</td>';
+                        m +='<td width=150></td>';
+                        m +='<td width=200>' + ret.data.list[tt].TxNegoRate + ' Mbps</td>';
+                        m +='</tr>';
+                        m +='<tr>';
+                        m +='<td width=100></td>';
+                        m +='<td width=100>接收速率:</td>';
+                        m +='<td width=150></td>';
+                        m +='<td width=200>' + ret.data.list[tt].RxNegoRate + ' Mbps</td>';
+                        m +='</tr>';
+                        m +='<tr>';
+                        m +='<td width=100></td>';
+                        m +='<td width=100>连接时间:</td>';
+                        m +='<td width=150></td>';
+
+                        m +='<td width=100>' + online_time + '</td>';
+                        m +='</tr>';
+
+                        m +='<tr>';
+                        m +='<td width=100></td>';
+                        m +='<td width=100>实时接收速率:</td>';
+                        m +='<td width=150></td>';
+                        m +='<td width=200>' + ret.data.list[tt].RxRate + ' Mbps</td>';
+                        m +='</tr>';
+
+                        m +='<tr>';
+                        m +='<td width=100></td>';
+                        m +='<td width=100>实时发送速率:</td>';
+                        m +='<td width=150></td>';
+                        m +='<td width=200>' + ret.data.list[tt].TxRate + ' Mbps</td>';
+                        m +='</tr>';
+
+                        m +='<tr>';
+                        m +='<td width=100></td>';
+                        m +='<td width=100>总流量:</td>';
+                        m +='<td width=150></td>';
+                        m +='<td width=200>' + ret.data.list[tt].ToTalcnt + ' MB</td>';
+                        m +='</tr>';
+
+                        m +='<tr>';
+                        m +='<td width=100></td>';
+                        m +='<td width=100>备注:</td>';
+                        m +='<td width=150></td>';
+                        m +='<td width=200>' + ret.data.list[tt].Alias + '</td>';
+                        m +='</tr>';
+                        document.getElementById('details').innerHTML = m;
+
+                    }
+                    /*当点击调用此方法,将悬浮窗口和背景全部隐藏*/
+                    function hideWindow() {
+                        document.getElementById('details').innerHTML = "";
+                        document.getElementById("window").style.display = "none";
+                        document.getElementById("shadow").style.display = "none";
+                    }
+
+
+
+                </script>
+
+
+            </table>
+
+        </div>
+    </div>
+
+    <!--出现悬浮窗口后,背景变暗-->
+    <div id="shadow" class="shadow_css"></div>
+<SCRIPT>
+Set_refresh();
+</SCRIPT>
+
+</body>
+
+</html>

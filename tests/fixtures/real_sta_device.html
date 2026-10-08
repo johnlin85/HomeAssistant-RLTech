@@ -1,0 +1,1261 @@
+<!--
+REAL SAMPLE (sanitized) - RLTech AC 8080 Web UI, captured 2026-09-29 (phase 0) from WAN http://<AC-WAN>:8080.
+Source page: /cgi-bin/sta-device.asp   Capture: GET (Chinese UI labels)
+Firmware: AC hw V0.1.0 / sw V0.0.30 (lan_num=6, lan_pon_num=2); APs FS8820A V0.1.21, RL820GW-AX3 V0.0.51.
+Page content is byte-for-byte what boa returned except for these substitutions (same rules in every real_* file):
+  - Vendor OUI E0:21:FE kept; the device-specific (NIC) part of each MAC is replaced:
+      AP-A (FS8820A)      -> E0:21:FE:A0:A0:0x  (base MAC ..:00, BSSIDs ..:04/..:05)
+      AP-B (RL820GW-AX3)  -> E0:21:FE:B0:B0:0x
+      AC (LAN ..:00, WAN ..:02) -> E0:21:FE:C0:C0:0x
+    The same NIC substitution is applied everywhere the MAC is embedded: PON SN (RLGMFEA0A000 /
+    RLGMFEB0B000, sn_address RLGM-FEA0A000), DevName/HostName (FTTRSub_A0A000 / FTTRSub_B0B000),
+    EUI-64 IPv6 (...:fea0:a000). Upper/lower case and colon/no-colon style of the original are kept.
+  - Other (client) MACs -> 02:00:00:00:00:NN, numbered in first-seen order across all real_* files.
+  - DevSN: AP-A -> RLGM00000000001, AP-B -> RL00000000002; AC serial -> RL0000000000003 (lengths kept).
+  - IPv4: AC LAN /24 -> 192.0.2.X, AC WAN /24 -> 198.51.100.X, AP-A mgmt /24 -> 203.0.113.X
+    (last octet kept, so AP-B = 192.0.2.10, AP-A = 192.0.2.4, AC LAN = 192.0.2.1). Masks kept.
+  - Client IPv6 link-local (other than fe80::1) -> fe80::2:0:0:NN.
+  - UUIDs (AP Fingerprint, task SeqId) -> 00000000-0000-4000-8000-0000000000NN.
+  - Client host names -> client-host-NN; SSID -> TEST_SSID / TEST_SSID_5G.
+  - No ecntToken, cookie or password appears in these pages (checked); nothing else was removed.
+-->
+<!--[if IE]>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--[else]>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<![endif]-->
+<HTML><HEAD><TITLE>设备信息</TITLE>
+<META http-equiv=Content-Language content=zh-cn>
+<META http-equiv=Content-Type content="text/html; charset=utf8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<link href="/bootstrap-4.6.2/css/bootstrap.min.css" type=text/css rel=stylesheet>
+<link href="/bootstrap-4.6.2/font/bootstrap-icons.css" type=text/css rel=stylesheet>
+<link href="/JS/tabler.min.css" type=text/css rel=stylesheet>
+<LINK href="/JS/stylemain.css" type=text/css rel=stylesheet>
+<SCRIPT language=javascript src="/JS/jquery-1.10.2.min.js"></SCRIPT>
+<script language=javascript src="/bootstrap-4.6.2/js/bootstrap.bundle.min.js"></script>
+<SCRIPT language=javascript src="/JS/tabler.min.js"></SCRIPT>
+<SCRIPT language=javascript src="/JS/menu.js"></SCRIPT>
+<SCRIPT language=javascript src="/JS/util.js"></SCRIPT>
+<SCRIPT language=JavaScript src="/JS/printtable.js"></SCRIPT>
+<META content="MSHTML 6.00.6000.16809" name=GENERATOR></HEAD>
+<BODY style="TEXT-ALIGN: center" vLink=#000000 aLink=#000000 link=#000000 leftMargin=0 topMargin=0 
+onload="FinishLoad();if(getElById('ConfigForm') != null)LoadFrame()"
+onunload=DoUnload() marginheight="0" marginwidth="0">
+<div class="page">
+  <aside class="navbar navbar-vertical navbar-expand-lg navbar-dark">
+    <div class="container-fluid">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#sidebar-menu" aria-controls="sidebar-menu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <h1 class="navbar-brand navbar-brand-autodark">
+        <a href="#">
+          <img src="/img/background_logo.png" width="110" height="5" class="navbar-brand-image">
+          <span>
+            <SCRIPT language=javascript>
+              document.write(top.productionName);
+            </SCRIPT>
+          </span>
+        </a>
+      </h1>
+      <div class="navbar-nav flex-row d-lg-none">
+        <div class="nav-item dropdown">
+          <a class="nav-link logout" onclick=DoLogout() href="/cgi-bin/logout.cgi" target=_top>
+            <i class="bi bi-box-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+      <div class="collapse navbar-collapse" id="sidebar-menu">
+        <INPUT id=Selected_Menu type=hidden value="状态->设备信息" name=Selected_Menu>
+        <SCRIPT language=javascript>
+          MakeMenu(getElById ('Selected_Menu').value);
+        </SCRIPT>
+      </div>
+    </div>
+  </aside>
+  <header class="navbar navbar-expand-md navbar-light d-none d-lg-flex d-print-none sticky-top">
+    <div class="container-xl">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-menu" aria-controls="navbar-menu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbar-menu">
+        <div>
+          <span>型号: </span>
+          <span>
+            <SCRIPT language=javascript>
+              document.write(top.ModelName);
+            </SCRIPT>
+          </span>
+        </div>
+        <div autocomplete="off" novalidate="" style="margin:0%;">
+          <div class="input-icon">
+            <i class="bi bi-search input-icon-addon"></i>
+            <input type="text" value="" class="form-control" placeholder="功能搜索..." aria-label="Search in website">
+          </div>
+        </div>
+        <ul class="navbar-nav">
+          <li class="nav-item text-nowrap">
+            <a class="nav-link logout" onclick=DoLogout() href="/cgi-bin/logout.cgi" target=_top>退出</a>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+  </header>
+  <div class="page-wrapper">
+    <!-- Page header -->
+    <div class="page-header d-print-none">
+      <div class="container-xl">
+        <div class="row g-2 align-items-center">
+          <div class="col" id="stepNav">
+            <ol class="breadcrumb breadcrumb-arrows">
+              <li class="breadcrumb-item"><a href="#">状态</a></li>
+              <li class="breadcrumb-item active"><a href="#">设备信息</a></li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Page body -->
+    <div class="page-body">
+      <div class="container-xl">
+		    <div class="row row-cards">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h3>设备信息</h3>
+              </div>
+              <div class="card-body">
+              <!--content start-->
+      <SCRIPT language=JavaScript type=text/javascript>
+
+		var Nametype = 0;
+ 		var para = 0;	  
+		var pvc_counts=2;
+		//get all value
+		// num 0
+		var vArrayStr = "1_INTERNET_B_VID_,2_INTERNET_R_VID_10,";
+		var Wan_WanName = vArrayStr.split(',');
+		// num 1
+		vArrayStr = "nas0_0,nas1_0,";
+		var Wan_WanValue = vArrayStr.split(',');
+		// num 2
+		vArrayStr = "0,8,";
+		// num 3
+		vArrayStr = "Yes,Yes,";
+		Wan_Actives = vArrayStr.split(',');
+		// num 4		
+		vArrayStr = "Disabled,Enable,";
+		var WANEnNAT = vArrayStr.split(',');
+		// num 5		
+		vArrayStr = "nas0_0,nas1_0,";
+		var Wan_IFName = vArrayStr.split(',');
+		// num 6		
+		vArrayStr = "IPv4,IPv4,";
+		var Wan_IPVERSION = vArrayStr.split(',');
+		// num 7		
+		vArrayStr = "up,up,";
+		var Wan_Status4 = vArrayStr.split(',');
+		// num 8		
+		vArrayStr = "N/A,198.51.100.29,";
+		var Wan_IP4 = vArrayStr.split(',');
+		// num 9		
+		vArrayStr = ",DHCP,";
+		var Wan_ENCAP = vArrayStr.split(',');
+		// num 10		
+		vArrayStr = "N/A,198.51.100.1,";
+		var Wan_GateWay4 = vArrayStr.split(',');
+		// num 11		
+		vArrayStr = "N/A,198.51.100.1,";
+		var Wan_DNS4 = vArrayStr.split(',');
+		// num 12		
+		vArrayStr = "N/A,N/A,";
+		var Wan_SecDNS4 = vArrayStr.split(',');
+		// num 13		
+		vArrayStr = "up,N/A,";
+		var Wan_Status6 = vArrayStr.split(',');
+		// num 14		
+		vArrayStr = "N/A,N/A,";
+		var Wan_IP6 = vArrayStr.split(',');
+		// num 15		
+		vArrayStr = "N/A,N/A,";
+		var Wan_GateWay6 = vArrayStr.split(',');
+		// num 16		
+		vArrayStr = "N/A,N/A,";
+		var Wan_DNS6 = vArrayStr.split(',');
+		// num 17		
+		vArrayStr = "N/A,N/A,";
+		var Wan_SecDNS6 = vArrayStr.split(',');
+		// num 18		
+		vArrayStr = "N/A,N/A,";
+		var Wan_PD6 = vArrayStr.split(',');
+		// num 19		
+		vArrayStr = "N/A,255.255.255.0,";
+		var Wan_NetMask4 = vArrayStr.split(',');
+		// num 20		
+		vArrayStr = "1,2,";
+		// num 21		
+		vArrayStr = ",,";
+		// num 22		
+		vArrayStr = "Connect_Keep_Alive,Connect_Keep_Alive,";
+		var Wan_Connection = vArrayStr.split(',');
+		// num 23		
+		vArrayStr = "-/-,10/0,";
+		var Wan_VidPRI = vArrayStr.split(',');
+		// num 24		
+		vArrayStr = "N/A,E0:21:FE:C0:C0:02,";
+		var Wan_MAC = vArrayStr.split(',');
+		vArrayStr = "N/A";
+		var Wan_ConnectionError = vArrayStr.split(',');
+		SortUtil.SetReplaceStrflag(1);
+		Wan_WanName = SortUtil.UpdateWanIFName( Wan_WanName, pvc_counts );
+
+		Wan_Actives = SortUtil.SortMyArray( Wan_Actives );
+		Wan_IPVERSION = SortUtil.SortMyArray( Wan_IPVERSION );
+		Wan_Status4 = SortUtil.SortMyArray( Wan_Status4 );
+		Wan_IP4 = SortUtil.SortMyArray( Wan_IP4 );
+		Wan_ENCAP = SortUtil.SortMyArray( Wan_ENCAP );
+		Wan_GateWay4 = SortUtil.SortMyArray( Wan_GateWay4 );
+		Wan_DNS4 = SortUtil.SortMyArray( Wan_DNS4 );
+		Wan_SecDNS4 = SortUtil.SortMyArray( Wan_SecDNS4 );
+		Wan_Status6 = SortUtil.SortMyArray( Wan_Status6 );
+		Wan_IP6 = SortUtil.SortMyArray( Wan_IP6 );
+		Wan_GateWay6 = SortUtil.SortMyArray( Wan_GateWay6 );
+		Wan_DNS6 = SortUtil.SortMyArray( Wan_DNS6 );
+		Wan_SecDNS6 = SortUtil.SortMyArray( Wan_SecDNS6 );
+		Wan_PD6 = SortUtil.SortMyArray( Wan_PD6 );
+		Wan_NetMask4 = SortUtil.SortMyArray( Wan_NetMask4 );
+		Wan_Connection = SortUtil.SortMyArray( Wan_Connection );
+		Wan_VidPRI = SortUtil.SortMyArray( Wan_VidPRI );
+		Wan_MAC = SortUtil.SortMyArray( Wan_MAC );
+		Wan_ConnectionError = SortUtil.SortMyArray( Wan_ConnectionError );
+		Wan_IFName = SortUtil.SortMyArray( Wan_IFName );
+
+
+function get_pontype()
+{
+  var phy_status = 'down';
+  var pon_mode = '3';
+  var is_LTE_Supported = 'N/A';
+  var is_LTE_Def_Route = 'N/A';
+  var pon_type = "GPON";
+  var is_fm6840b = 'Yes';
+  var is_up_link_sfp_choose = 'Yes';
+  var is_active_ether_wan = 'Yes';
+  var ae_wan_speed = '1000M';
+  
+  if( phy_status == "gpon_phy_up" || phy_status == "gpon_phy_down" )
+  	pon_type = "GPON";
+  else if( phy_status == "epon_phy_up" || phy_status == "epon_phy_down" )
+  	pon_type = "EPON";
+  	
+  if( pon_mode != "1" && pon_mode != "2" && pon_mode != "0" )
+  {              	
+  	if( pon_mode == "6" )
+  		pon_type = "XG-PON";
+    else if( pon_mode == "7" )
+        pon_type = "XGS-PON";
+	else if( pon_mode == "5" )
+  		pon_type = "EPON";
+	else
+  		pon_type = "10G-EPON";
+  }
+  	
+  /* no pon info */
+  if ( 'down' == phy_status )
+  {
+  	switch ( pon_mode )
+  	{
+  		case "1":
+	  		pon_type = "GPON";
+	  		break;
+			case "2":
+	  		pon_type = "EPON";
+	  		break;
+	  	case "3":
+	  	case "4":
+		  	pon_type = "10G-EPON";
+		  	break;
+	  	case "5":
+		  	pon_type = "EPON";
+		  	break;
+		case "6":
+		  	pon_type = "XG-PON";
+		  	break;
+		case "7":
+			pon_type = "XGS-PON";
+			break;
+  	}
+  }
+
+/*rogerwu add for fm6840b*/
+  if( 'Yes' == is_fm6840b) 
+  {
+  	switch ( pon_mode )
+	{
+	  	case "3":
+			pon_type = "XEPON";
+			break;
+		case "6":
+			pon_type = "XG-PON";
+			break;
+	}
+  }
+  	
+  if ( is_up_link_sfp_choose == 'Yes' && is_active_ether_wan == 'Yes' )
+  {
+    if ( pon_mode == "3" )
+    {
+        if (ae_wan_speed == "1000M")
+        {
+            pon_type = "GE";
+        }
+        else if (ae_wan_speed == "10000M")
+        {
+            pon_type = "10GE";
+        }
+        else
+        {
+            pon_type = "GE/10GE";
+        }
+    }
+  }
+
+
+  if (is_LTE_Supported == "Yes" && is_LTE_Def_Route == "Yes")
+  {
+    pon_type = "LTE";
+  }
+  return pon_type;	
+}
+
+
+    var portNumber = "4";
+
+
+    var isWifiSupported = "NoAP";
+
+
+
+	var flag = "1";
+	var tmp_devtype;
+	if(flag == "2")
+	{
+		tmp_devtype = get_pontype();
+	}else {
+		tmp_devtype = get_pontype();
+	}
+
+    deviceType = tmp_devtype;
+
+
+
+
+
+function stDeviceInfo(domain,ProductClass,SerialNumber,HardwareVersion,SoftwareVersion,ManufacturerOUI)
+{
+this.domain = domain;
+this.ProductClass = ProductClass;
+this.ManufacturerOUI = ManufacturerOUI;
+this.SerialNumber = SerialNumber;
+this.HardwareVersion = HardwareVersion;
+this.SoftwareVersion = SoftwareVersion;
+}
+temp = new Array(new stDeviceInfo("InternetGatewayDevice.DeviceInfo",top.ModelName,"19191900AABB818180","HG530RRA.VER.C","V100R001C01B010","00AABB"),null);
+var DeviceInfo = temp[0];
+function LoadFrame()
+{
+
+}
+var BatchNumber = "RWC30P0.010.84725";
+
+function PonInfoClass()
+{
+	this.LinkSta				= 'N/A';
+	this.trafficstate			= 'down';
+	this.fecState				= 'N/A';
+	this.PonState				= 'down';
+	this.FECEnable				= 'disabled';
+	this.WarnInfo				= 'disconnect';
+	this.PonSendPkt				= '13298782';
+	this.PonRecvPkt				= '34010009';
+	this.SendPower				= '-';
+	this.RecvPower				= '-';
+	this.WorkVoltage			= '-';
+	this.WorkElectric			= '-';
+	this.WorkTemperature		= '-';
+			
+	if ( 'up' == this.trafficstate )
+	{
+		this.PonState 			= 'up';
+		this.WarnInfo 			= 'no info';
+	}
+			
+	if( '0' != this.LinkSta)
+	{
+		this.SendPower			= (Math.round(Math.log((Number(1))/10000)/(Math.log(10))*100)/10);
+		this.RecvPower			= (Math.round(Math.log((Number(1))/10000)/(Math.log(10))*100)/10);
+	}
+
+	if ( '1' == this.fecState )
+	{
+		this.FECEnable			= 'enabled';
+	}
+}
+var PonInfo = new PonInfoClass();
+
+function usable_port(index)
+{
+	var pvcindex = Wan_IFName[index].indexOf('_')-1;
+	var interface = parseInt(Wan_IFName[index].substr(pvcindex,1));
+	var tempbuf = '';
+	var usable_port='';
+	switch(interface)
+	{
+		case 0:
+			
+			
+			
+			
+			
+			
+			
+			
+			break;
+		case 1:
+				
+				
+				
+				
+				
+				
+				
+				
+			break;
+		case 2:
+				
+				
+				
+				
+				
+				
+				
+				
+			break;
+		case 3:
+				
+				
+				
+				
+				
+				
+				
+				
+			break;
+		case 4:
+				
+				
+				
+				
+				
+				
+				
+				
+				break;
+			case 5:
+				
+				
+				
+				
+				
+				
+				
+				
+				break;
+			case 6:
+				
+				
+				
+				
+				
+				
+				
+				
+				break;
+			case 7:
+				
+				
+				
+				
+				
+				
+				
+				
+				break;
+	}
+	for(var i= 1 ;i<tempbuf.length;i++)
+	{
+		usable_port += tempbuf.charAt(i);
+	}
+	return usable_port;
+}
+
+function ListCreate_info2()
+{
+	var index = -1;
+	var index1 = -1;
+	var loc = new Array();
+	var usable = new Array();
+	var disusable = new Array();
+	for(var i=0; i<pvc_counts; i++)
+	{
+			loc[i] = '<TABLE cellSpacing=0 cellPadding=3 width=440 border=1>';
+			loc[i] += '<tr>';
+      loc[i] += '<TD class=table_title align=middle width="15%">业务类型</TD>';
+      loc[i] += '<TD class=table_title align=middle width="15%">状态</TD>';
+      loc[i] += '<TD class=table_title align=middle width="15%">IP协议</TD>';
+      loc[i] += '<TD class=table_title align=middle width="15%">连接模式</TD>';
+      loc[i] += '<TD class=table_title align=middle width="15%">可用端口</TD>';
+      loc[i] += '<TD class=table_title align=middle width="15%">连接名称</TD>';
+      loc[i] += '</tr>';
+      loc[i] += '<tr>';
+			if(Wan_WanName[i].indexOf('INTERNET') >= 0)
+			{
+				var port = usable_port(i);
+				loc[i] += '<td width="15">' + '网络' + '</td>';
+				if(Wan_IPVERSION[i] == "IPv4" || Wan_IPVERSION[i] == "IPv4/IPv6")
+				{
+					if(PonInfo.PonState == "up")
+					{
+						if('up' == Wan_Status4[i])
+						{
+							loc[i] += '<td width="15">' + '可用' + '</td>';
+							index ++;
+							usable[index] = i;
+						}
+						else
+						{
+							loc[i] += '<td width="15">' + '不可用' + '</td>';
+							index1 ++;
+							disusable[index1] = i;
+						}
+						loc[i] += '<td width="15">' + Wan_IPVERSION[i] + '</td>';
+						if( (Wan_ENCAP[i].indexOf('PPPoE') >=0 ) || (Wan_ENCAP[i].indexOf('DHCP') >=0 ) )
+						{
+							loc[i] += '<td width="15">' + '路由' + '</td>';
+						}
+						else
+						{
+							loc[i] += '<td width="15">' + '桥接' + '</td>';
+						}
+						loc[i] += '<td width="15">' + port + '</td>';
+						loc[i] += '<td width="25">' + Wan_WanName[i] + '</td>';
+					}
+					else
+					{
+						index1 ++;
+						disusable[index1] = i;
+						loc[i] += '<td width="15">' + '不可用' + '</td>';
+						loc[i] += '<td width="15">' + Wan_IPVERSION[i] + '</td>';
+						if( (Wan_ENCAP[i].indexOf('PPPoE') >=0 ) || (Wan_ENCAP[i].indexOf('DHCP') >=0 ) )
+						{
+							loc[i] += '<td width="15">' + '路由' + '</td>';
+						}
+						else
+						{
+							loc[i] += '<td width="15">' + '桥接' + '</td>';
+						}
+						
+						loc[i] += '<td width="15">' + port + '</td>';
+						loc[i] += '<td width="25">' + Wan_WanName[i] + '</td>';
+					}
+				}
+				else if(Wan_IPVERSION[i] == "IPv6")
+				{
+					if(PonInfo.PonState == "up")
+					{
+						if('up' == Wan_Status6[i])
+						{
+							loc[i] += '<td width="15">' + '可用' + '</td>';
+							index ++;
+							usable[index] = i;
+						}
+						else
+						{
+							loc[i] += '<td width="15">' + '不可用' + '</td>';
+							index1 ++;
+							disusable[index1] = i;
+						}
+						loc[i] += '<td width="15">' + Wan_IPVERSION[i] + '</td>';
+						if( (Wan_ENCAP[i].indexOf('PPPoE') >=0 ) || (Wan_ENCAP[i].indexOf('DHCP') >=0 ) )
+						{
+							loc[i] += '<td width="15">' + '路由' + '</td>';
+						}
+						else
+						{
+							loc[i] += '<td width="15">' + '桥接' + '</td>';
+						}
+						loc[i] += '<td width="15">' + port + '</td>';
+						loc[i] += '<td width="25">' + Wan_WanName[i] + '</td>';
+					}
+					else
+					{
+						index1 ++;
+						disusable[index1] = i;
+						loc[i] += '<td width="15">' + '不可用' + '</td>';
+						loc[i] += '<td width="15">' + Wan_IPVERSION[i] + '</td>';
+						if( (Wan_ENCAP[i].indexOf('PPPoE') >=0 ) || (Wan_ENCAP[i].indexOf('DHCP') >=0 ) )
+						{
+							loc[i] += '<td width="15">' + '路由' + '</td>';
+						}
+						else
+						{
+							loc[i] += '<td width="15">' + '桥接' + '</td>';
+						}
+						loc[i] += '<td width="15">' + port + '</td>';
+						loc[i] += '<td width="25">' + Wan_WanName[i] + '</td>';
+					}
+				}
+			}
+			else
+			{
+				loc[i] += '<td width="15">' + '网络' + '</td>';
+				loc[i] += '<td width="15">' + '未配置' + '</td>';
+				loc[i] += '<td width="15">' + '未配置' + '</td>';
+				loc[i] += '<td width="15">' + '未配置' + '</td>';
+				loc[i] += '<td width="15">' + '未配置' + '</td>';
+				loc[i] += '<td width="25">' + '未配置' + '</td>';
+			}
+			loc[i] += '</tr>';
+	}
+	if(index != -1)
+		 return loc[usable[0]];
+	else {
+		 if(index1 != -1)
+				return loc[disusable[0]];	
+	}
+	return loc[0];	
+}
+function ListCreate_info3()
+{
+	var index = -1;
+	var index1 = -1;
+	var loc = new Array();
+	var ITV_name = 'N/A';
+	var usable = new Array();
+	var disusable = new Array();
+	for(var i=0; i<pvc_counts; i++)
+	{
+      loc[i] = '<tr>';
+			if(Wan_WanName[i].indexOf(ITV_name) >= 0)
+			{
+				var port = usable_port(i);
+				loc[i] += '<td width="15">' + 'iTV' + '</td>';
+				if(Wan_IPVERSION[i] == "IPv4" || Wan_IPVERSION[i] == "IPv4/IPv6")
+				{
+					if(PonInfo.PonState == "up")
+					{
+						if('up' == Wan_Status4[i])
+						{
+							loc[i] += '<td width="15">' + '可用' + '</td>';
+							index ++;
+							usable[index] = i;
+						}
+						else
+						{
+							loc[i] += '<td width="15">' + '不可用' + '</td>';
+							index1 ++;
+							disusable[index1] = i;
+						}
+						loc[i] += '<td width="15">' + Wan_IPVERSION[i] + '</td>';
+						if( (Wan_ENCAP[i].indexOf('PPPoE') >=0 ) || (Wan_ENCAP[i].indexOf('DHCP') >=0 ) )
+						{
+							loc[i] += '<td width="15">' + '路由' + '</td>';
+						}
+						else
+						{
+							loc[i] += '<td width="15">' + '桥接' + '</td>';
+						}
+						loc[i] += '<td width="15">' + port + '</td>';
+						loc[i] += '<td width="25">' + Wan_WanName[i] + '</td>';
+					}
+					else
+					{
+						index1 ++;
+						disusable[index1] = i;
+						loc[i] += '<td width="15">' + port + '</td>';
+						loc[i] += '<td width="15">' + Wan_IPVERSION[i] + '</td>';
+						if( (Wan_ENCAP[i].indexOf('PPPoE') >=0 ) || (Wan_ENCAP[i].indexOf('DHCP') >=0 ) )
+						{
+							loc[i] += '<td width="15">' + '路由' + '</td>';
+						}
+						else
+						{
+							loc[i] += '<td width="15">' + '桥接' + '</td>';
+						}
+						loc[i] += '<td width="15">' + port + '</td>';
+						loc[i] += '<td width="25">' + Wan_WanName[i] + '</td>';
+					}
+				}
+				else if(Wan_IPVERSION[i] == "IPv6")
+				{
+					if(PonInfo.PonState == "up")
+					{
+						if('up' == Wan_Status6[i])
+						{
+							loc[i] += '<td width="15">' + '可用' + '</td>';
+							index ++;
+							usable[index] = i;
+						}
+						else
+						{
+							loc[i] += '<td width="15">' + '不可用' + '</td>';
+							index1 ++;
+							usable[index1] = i;
+						}
+						loc[i] += '<td width="15">' + Wan_IPVERSION[i] + '</td>';
+						if( (Wan_ENCAP[i].indexOf('PPPoE') >=0 ) || (Wan_ENCAP[i].indexOf('DHCP') >=0 ) )
+						{
+							loc[i] += '<td width="15">' + '路由' + '</td>';
+						}
+						else
+						{
+							loc[i] += '<td width="15">' + '桥接' + '</td>';
+						}
+						loc[i] += '<td width="15">' + port + '</td>';
+						loc[i] += '<td width="25">' + Wan_WanName[i] + '</td>';
+					}
+					else
+					{
+						index1 ++;
+						usable[index1] = i;
+						loc[i] += '<td width="15">' + '不可用' + '</td>';
+						loc[i] += '<td width="15">' + Wan_IPVERSION[i] + '</td>';
+						if( (Wan_ENCAP[i].indexOf('PPPoE') >=0 ) || (Wan_ENCAP[i].indexOf('DHCP') >=0 ) )
+						{
+							loc[i] += '<td width="15">' + '路由' + '</td>';
+						}
+						else
+						{
+							loc[i] += '<td width="15">' + '桥接' + '</td>';
+						}
+						loc[i] += '<td width="15">' + port + '</td>';
+						loc[i] += '<td width="25">' + Wan_WanName[i] + '</td>';
+					}
+				}
+			}
+			else
+			{
+				loc[i] += '<td width="15">' + 'iTV' + '</td>';
+				loc[i] += '<td width="15">' + '未配置' + '</td>';
+				loc[i] += '<td width="15">' + '未配置' + '</td>';
+				loc[i] += '<td width="15">' + '未配置' + '</td>';
+				loc[i] += '<td width="15">' + '未配置' + '</td>';
+				loc[i] += '<td width="25">' + '未配置' + '</td>';
+			}
+			loc[i] += '</tr>';
+			
+	}
+	if(index != -1)
+		 return loc[usable[0]];
+	else {
+		 if(index1 != -1)
+				return loc[disusable[0]];	
+	}
+		return loc[0];	
+}
+function ListCreate_info4()
+{
+	var index = -1;
+	var index1 = -1;
+	var loc = new Array();
+	var usable = new Array();
+	var disusable = new Array();
+	for(var i=0; i<pvc_counts; i++)
+	{
+		var port = usable_port(i);
+      loc[i] = '<tr>';
+			if(Wan_WanName[i].indexOf('VOICE') >= 0)
+			{
+				loc[i] += '<td width="15">' + '语音' + '</td>';
+				if(Wan_IPVERSION[i] == "IPv4" || Wan_IPVERSION[i] == "IPv4/IPv6")
+				{
+					if(PonInfo.PonState == "up")
+					{
+						if('up' == Wan_Status4[i])
+						{
+							loc[i] += '<td width="15">' + '可用' + '</td>';
+							index ++;
+							usable[index] = i;
+						}
+						else
+						{
+							loc[i] += '<td width="15">' + '不可用' + '</td>';
+							index1 ++;
+							disusable[index1] = i;
+						}
+						loc[i] += '<td width="15">' + Wan_IPVERSION[i] + '</td>';
+						if( (Wan_ENCAP[i].indexOf('PPPoE') >=0 ) || (Wan_ENCAP[i].indexOf('DHCP') >=0 ) )
+						{
+							loc[i] += '<td width="15">' + '路由' + '</td>';
+						}
+						else
+						{
+							loc[i] += '<td width="15">' + '桥接' + '</td>';
+						}
+						loc[i] += '<td width="15">' + port + '</td>';
+						loc[i] += '<td width="25">' + Wan_WanName[i] + '</td>';
+					}
+					else
+					{
+						index1 ++;
+						disusable[index1] = i;
+						loc[i] += '<td width="15">' + '不可用' + '</td>';
+						loc[i] += '<td width="15">' + Wan_IPVERSION[i] + '</td>';
+						if( (Wan_ENCAP[i].indexOf('PPPoE') >=0 ) || (Wan_ENCAP[i].indexOf('DHCP') >=0 ) )
+						{
+							loc[i] += '<td width="15">' + '路由' + '</td>';
+						}
+						else
+						{
+							loc[i] += '<td width="15">' + '桥接' + '</td>';
+						}
+						loc[i] += '<td width="15">' + port + '</td>';
+						loc[i] += '<td width="25">' + Wan_WanName[i] + '</td>';
+					}
+				}
+				else if(Wan_IPVERSION[i] == "IPv6" || Wan_IPVERSION[i] == "IPv4/IPv6")
+				{
+					if(PonInfo.PonState == "up")
+					{
+						if('up' == Wan_Status6[i])
+						{
+							loc[i] += '<td width="15">' + '可用' + '</td>';
+							index ++;
+							usable[index] = i;
+						}
+						else
+						{
+							loc[i] += '<td width="15">' + '不可用' + '</td>';
+							index1 ++;
+							disusable[index1] = i;
+						}
+						loc[i] += '<td width="15">' + Wan_IPVERSION[i] + '</td>';
+						if( (Wan_ENCAP[i].indexOf('PPPoE') >=0 ) || (Wan_ENCAP[i].indexOf('DHCP') >=0 ) )
+						{
+							loc[i] += '<td width="15">' + '路由' + '</td>';
+						}
+						else
+						{
+							loc[i] += '<td width="15">' + '桥接' + '</td>';
+						}
+						loc[i] += '<td width="15">' + port + '</td>';
+						loc[i] += '<td width="25">' + Wan_WanName[i] + '</td>';
+					}
+					else
+					{
+						index1 ++;
+						disusable[index1] = i;
+						loc[i] += '<td width="15">' + '不可用' + '</td>';
+						loc[i] += '<td width="15">' + Wan_IPVERSION[i] + '</td>';
+						if( (Wan_ENCAP[i].indexOf('PPPoE') >=0 ) || (Wan_ENCAP[i].indexOf('DHCP') >=0 ) )
+						{
+							loc[i] += '<td width="15">' + '路由' + '</td>';
+						}
+						else
+						{
+							loc[i] += '<td width="15">' + '桥接' + '</td>';
+						}
+						loc[i] += '<td width="15">' + port + '</td>';
+						loc[i] += '<td width="25">' + Wan_WanName[i] + '</td>';
+					}
+				}
+			}
+			else
+			{
+				loc[i] += '<td width="15">' + '语音' + '</td>';
+				loc[i] += '<td width="15">' + '未配置' + '</td>';
+				loc[i] += '<td width="15">' + '未配置' + '</td>';
+				loc[i] += '<td width="15">' + '未配置' + '</td>';
+				loc[i] += '<td width="15">' + '未配置' + '</td>';
+				loc[i] += '<td width="25">' + '未配置' + '</td>';
+			}
+			loc[i] += '</tr>';
+	}
+	
+	if(index != -1)
+		return loc[usable[0]];	
+	else 
+	{
+		if(index1 != -1)
+			return loc[disusable[0]];	
+		else
+			return loc[0];	
+	}
+}
+function ListCreate_info5()
+{
+	var index = -1;
+	var index1 = -1;
+	var loc = new Array();
+	var usable = new Array();
+	var disusable = new Array();
+	for(var i=0; i<pvc_counts; i++)
+	{
+			var port = usable_port(i);
+			loc[i] = '<tr>';
+			if(Wan_WanName[i].indexOf('TR069') >= 0)
+			{
+				loc[i] += '<td width="15">' + '管理' + '</td>';
+				if(Wan_IPVERSION[i] == "IPv4" || Wan_IPVERSION[i] == "IPv4/IPv6")
+				{
+					if(PonInfo.PonState == "up")
+					{
+						if('up' == Wan_Status4[i])
+						{
+							loc[i] += '<td width="15">' + '可用' + '</td>';
+							index ++;
+							usable[index] = i;
+						}
+						else
+						{
+							loc[i] += '<td width="15">' + '不可用' + '</td>';
+							index1 ++;
+							disusable[index1] = i;
+						}
+						loc[i] += '<td width="15">' + Wan_IPVERSION[i] + '</td>';
+						if( (Wan_ENCAP[i].indexOf('PPPoE') >=0 ) || (Wan_ENCAP[i].indexOf('DHCP') >=0 ) )
+						{
+							loc[i] += '<td width="15">' + '路由' + '</td>';
+						}
+						else
+						{
+							loc[i] += '<td width="15">' + '桥接' + '</td>';
+						}
+						loc[i] += '<td width="15">' + port + '</td>';
+						loc[i] += '<td width="25">' + Wan_WanName[i] + '</td>';
+					}
+					else
+					{
+						index1 ++;
+						disusable[index1] = i;
+						loc[i] += '<td width="15">' + '不可用' + '</td>';
+						loc[i] += '<td width="15">' + Wan_IPVERSION[i] + '</td>';
+						if( (Wan_ENCAP[i].indexOf('PPPoE') >=0 ) || (Wan_ENCAP[i].indexOf('DHCP') >=0 ) )
+						{
+							loc[i] += '<td width="15">' + '路由' + '</td>';
+						}
+						else
+						{
+							loc[i] += '<td width="15">' + '桥接' + '</td>';
+						}
+						loc[i] += '<td width="15">' + port + '</td>';
+						loc[i] += '<td width="25">' + Wan_WanName[i] + '</td>';
+					}
+				}
+				else if(Wan_IPVERSION[i] == "IPv6")
+				{
+					if(PonInfo.PonState == "up")
+					{
+						if('up' == Wan_Status6[i])
+						{
+							loc[i] += '<td width="15">' + '可用' + '</td>';
+							index ++;
+							usable[index] = i;
+						}
+						else
+						{
+							loc[i] += '<td width="15">' + '不可用' + '</td>';
+							index1 ++;
+							disusable[index1] = i;
+						}
+						loc[i] += '<td width="15">' + Wan_IPVERSION[i] + '</td>';
+						if( (Wan_ENCAP[i].indexOf('PPPoE') >=0 ) || (Wan_ENCAP[i].indexOf('DHCP') >=0 ) )
+						{
+							loc[i] += '<td width="15">' + '路由' + '</td>';
+						}
+						else
+						{
+							loc[i] += '<td width="15">' + '桥接' + '</td>';
+						}
+						loc[i] += '<td width="15">' + port + '</td>';
+						loc[i] += '<td width="25">' + Wan_WanName[i] + '</td>';
+					}
+					else
+					{
+						index1 ++;
+						disusable[index1] = i;
+						loc[i] += '<td width="15">' + '不可用' + '</td>';
+						loc[i] += '<td width="15">' + Wan_IPVERSION[i] + '</td>';
+						if( (Wan_ENCAP[i].indexOf('PPPoE') >=0 ) || (Wan_ENCAP[i].indexOf('DHCP') >=0 ) )
+						{
+							loc[i] += '<td width="15">' + '路由' + '</td>';
+						}
+						else
+						{
+							loc[i] += '<td width="15">' + '桥接' + '</td>';
+						}
+						loc[i] += '<td width="15">' + port + '</td>';
+						loc[i] += '<td width="25">' + Wan_WanName[i] + '</td>';
+					}
+				}
+			}
+			else
+			{
+				loc[i] += '<td width="15">' + '管理' + '</td>';
+				loc[i] += '<td width="15">' + '未配置' + '</td>';
+				loc[i] += '<td width="15">' + '未配置' + '</td>';
+				loc[i] += '<td width="15">' + '未配置' + '</td>';
+				loc[i] += '<td width="15">' + '未配置' + '</td>';
+				loc[i] += '<td width="25">' + '未配置' + '</td>';
+			}
+			loc[i] += '</tr>';
+			loc[i] += '</table>';
+	}
+	
+	if(index != -1)
+		return loc[usable[0]];	
+	else 
+	{
+		if(index1 != -1)
+			return loc[disusable[0]];	
+		else
+			return loc[0];	
+	}
+}
+
+function writelisttable()
+{
+	var loc = '';
+	var loc_internet = ListCreate_info2();
+	var loc_itv = ListCreate_info3();
+	var loc_voice = ListCreate_info4();
+	var loc_tr69 = ListCreate_info5();
+	
+	loc = loc_internet + loc_itv + loc_voice + loc_tr69;
+	getElById('service').innerHTML = loc;
+}
+
+function uptime()
+{
+	var ponuptime = "N/A";
+	var curtime = 'N/A';
+	var update = new Date(ponuptime);
+	var curdate = new Date(curtime);
+	var diffDate = (curdate.getTime() - update.getTime())/1000;
+	var hour;
+	var minute;
+	var sec;
+	var tempbuf = "";
+	
+	hour = parseInt(diffDate/3600);
+	minute = parseInt((diffDate%3600)/60);
+	sec = (diffDate%3600)%60;
+	tempbuf = hour + '时' + minute + '分' + sec + '秒';
+	document.write(tempbuf);
+	
+}
+
+function stWlan(domain,enable,ssid,BeaconType,BasicEncrypt,BasicAuth,WPAEncrypt,WPAAuth,IEEE11iEncrypt,IEEE11iAuth,Channel,ChannelsInUse)
+{
+this.domain = domain;
+this.enable = enable;
+this.ssid = ssid;
+this.BeaconType = BeaconType;
+this.BasicAuth = BasicAuth;
+this.BasicEncrypt = BasicEncrypt;
+this.WPAAuth = WPAAuth;
+this.WPAEncrypt = WPAEncrypt;
+this.IEEE11iAuth = IEEE11iAuth;
+this.IEEE11iEncrypt = IEEE11iEncrypt;
+this.Channel = Channel;
+this.ChannelsInUse = ChannelsInUse;
+}
+
+
+var WlanInfo = new Array(4);
+WlanInfo[0] = new stWlan("0","N/A","N/A","N/A","N/A","N/A","N/A","N/A","AESEncryption","PSKAuthentication","0","1");
+
+WlanInfo[1] = new stWlan("1","N/A","N/A","N/A","N/A","N/A","N/A","N/A","AESEncryption","PSKAuthentication","0","1");
+WlanInfo[2] = new stWlan("2","N/A","N/A","N/A","N/A","N/A","N/A","N/A","AESEncryption","PSKAuthentication","0","1");
+WlanInfo[3] = new stWlan("3","N/A","N/A","N/A","N/A","N/A","N/A","N/A","AESEncryption","PSKAuthentication","0","1");
+
+var PacketInfo = new Array();
+PacketInfo = [["0","0","0","0","0","0","0","0","0"],null];
+ 
+function wanUpTime()
+{
+	var curTime = '1211442';
+	var WanUpTime = '489643';
+	var IsWanUp = '1';
+	var day;
+	var hour;
+	var minute;
+	var sec;
+	var tempbuf = "";
+	var diffTime = curTime - WanUpTime;
+
+	if ( IsWanUp == "0")
+	{
+		document.write("0:0:0");
+	}
+	else if (IsWanUp == 'N/A')
+	{
+		document.write("0:0:0");
+	}
+	else
+	{
+		day = parseInt(diffTime/(3600*24));
+		hour = parseInt((diffTime/3600)%24);
+		minute = parseInt((diffTime%3600)/60);
+		sec = parseInt((diffTime%3600)%60);
+
+		if(sec > 0){
+		  tempbuf = ""+parseInt(sec)+" Sec";
+		}
+		if(minute > 0) { 
+		  tempbuf = ""+parseInt(minute)+" Min "+tempbuf; 
+		} 
+		if(hour > 0) { 
+		  tempbuf = ""+parseInt(hour)+" Hour "+tempbuf; 
+		} 
+		if(day > 0) { 
+		  tempbuf = ""+parseInt(day)+" Days "+tempbuf; 
+		}
+		document.write(tempbuf);
+	}
+}
+
+</SCRIPT>
+
+      <FORM style="DISPLAY: none" name=ConfigForm></FORM>
+      <SCRIPT language=JavaScript src="/JS/printtable.js"></SCRIPT>
+      <div class="scroll-content">
+
+      <TABLE id=device name=device class="statblList" border="1">
+        <TBODY>
+            <TR>
+                <TD class="table_title" width="20%">设备类型:</TD>
+                      <TD>
+                    <SCRIPT language=javascript>
+                        var isHybridWANSupported = "N/A";
+                        var isWanEtherSupported = "Yes";
+                        if ( isHybridWANSupported != "Yes" && isWanEtherSupported == "Yes" )
+                        {
+                            var transMode = "ActiveEtherWan"; 
+                            if ( transMode == "Ethernet" )
+                                document.write("Ethernet");
+                            else if ( transMode == "ActiveEtherWan" )
+
+
+                                document.write("GE");
+
+
+                            else
+                                document.write(deviceType);
+                        }
+                        else
+                            document.write(deviceType);
+                    </SCRIPT>
+                        &nbsp;</TD></TR>
+                    </TR>
+                    <TR>
+                      <TD class="table_title" width="20%">生产厂家:</TD>
+                      <TD>
+            		<SCRIPT language=javascript>
+						document.write('ODM');
+					</SCRIPT>
+                        &nbsp;</TD></TR>                  
+
+                    <TR>
+                      <TD class="table_title" width="20%">设备型号:</TD>
+                      <TD>
+<!--
+
+                      <TD width=300>
+
+-->
+            		<SCRIPT language=javascript>
+
+						document.write(top.ModelName);
+   
+					</SCRIPT>
+                        &nbsp;</TD></TR>
+
+                    <TR>
+                      <TD class="table_title" width="20%">设备标识号:</TD>
+                      <TD>
+					E021FE-RL0000000000003
+                        &nbsp;
+                      </TD></TR>
+   
+                    <TR>
+                      <TD class="table_title" width="20%">硬件版本:</TD>
+                      <TD>
+					  V0.1.0
+                        &nbsp;                      </TD></TR>
+                    <TR>             
+                      <TD class="table_title" width="20%">软件版本:</TD>
+                      <TD>
+					  V0.0.30
+                        &nbsp;                      </TD></TR>
+             				
+
+
+
+					<TR>
+                      <TD class="table_title" width="20%">运行时间:</TD>
+                      <TD>
+					  14 Days 30 Min 42 Sec
+                        &nbsp;</TD>
+					</TR>
+					<TR>
+                      <TD class="table_title" width="20%">CPU温度:</TD>
+                      <TD>
+					  52
+                        ℃&nbsp;</TD>
+					</TR>
+					<TR>
+                      <TD class="table_title" width="20%">WAN在线时间:</TD>
+                      <TD>
+					  <SCRIPT language=JavaScript>
+					  wanUpTime();
+					  </SCRIPT>&nbsp;
+					  </TD>
+					</TR>
+
+                    <TR id=div_BatCode>
+                      <TD class="table_title" width="20%">批次编码:</TD>
+                      <TD>
+					  Device ID 54321
+                        &nbsp;                      </TD></TR>
+			<SCRIPT language=JavaScript type=text/javascript>
+				getElement("div_BatCode").style.display = "none";
+			</SCRIPT>
+
+
+						</TBODY>
+						</TABLE>
+            </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        </div>
+<!-- 暂时先屏蔽这部分内容
+
+       	
+-->
+<footer class="footer d-print-none sticky-bottom">
+      <div class="container-xl">
+        <div class="row row-deck row-cards">
+          <script language=JavaScript type=text/javascript>
+          
+          </script>
+        </div>
+      </div>
+    </footer>
+  </div>
+</div></BODY></HTML>

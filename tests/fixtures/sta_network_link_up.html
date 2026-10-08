@@ -1,0 +1,332 @@
+<!--
+SYNTHETIC fixture (NOT a device capture): sta-network.asp with a working uplink PON.
+Built from the git_FTTR SDK template
+apps/private/webPage/Router/e8c_ml_new_utf8/boaroot/cgi-bin/sta-network.asp
+(GPON TransMode branches), trimmed to the PON parts. Raw values are chosen so the
+page JS formulas give round numbers:
+  SupplyVoltage 33000 -> 3300 mV (/10), TxBiasCurrent 6000 -> 12 mA (*2/1000),
+  Temperature 12032 -> 47 C (/256), TxPower 19953 -> 3.0 dBm, RxPower 398 -> -14.0 dBm
+  (10*log10(x/10000)).
+get_pontype() (stage 6b): SDK template with isUplinkSFPModeChooseSupported 'No',
+isActiveEtherWanSupported 'No', ae_wan_speed 'N/A' (plain GPON ONU build).
+-->
+<HTML><HEAD><TITLE>网络侧信息</TITLE>
+<META http-equiv=Content-Language content=zh-cn>
+<META http-equiv=Content-Type content="text/html; charset=utf8">
+<SCRIPT language=javascript src="/JS/jquery-1.10.2.min.js"></SCRIPT>
+<SCRIPT language=javascript src="/JS/util.js"></SCRIPT>
+</HEAD>
+<BODY class="text-center">
+<div class="card-body tab-content">
+      <SCRIPT language=JavaScript type=text/javascript>
+		function transTemperature(temperature)
+		{
+			var temp = Number(temperature);
+			if (temp >= Math.pow(2, 15)){
+				return -((Math.pow(2, 16)-temp)/256).toFixed(1);
+			}else{
+				return (temp/256).toFixed(1);
+			}
+		}
+
+		function formatSeconds(value) {
+		 var theTime = parseInt(value);
+		 var result = '';
+		 if(theTime > 0){
+		  result = ""+parseInt(theTime)+"秒";
+		 }
+		 return result;
+		}
+
+		function PonInfoClass()
+		{
+			var SupplyVoltage = '33000';
+			var TxBiasCurrent = '6000';
+			var Temperature = '12032';
+			var TxPower = '19953';
+			var RxPower = '398';
+			this.LinkSta					= '1';
+			this.trafficstate			= 'up';
+			this.fecState					= '1';
+			this.ponType					= 'GPON';
+			this.loidStatus				= 'init';
+			this.PonState 				= 'down';
+			this.FECEnable 				= '-';
+			this.WarnInfo 				= 'disconnect';
+			this.PonSendPkt 			= '1000';
+			this.PonRecvPkt 			= '2000';
+			this.SendPower 				= '-';
+			this.RecvPower 				= '-';
+			this.WorkVoltage 			= (Number(SupplyVoltage)/10);
+			this.WorkElectric 		= (Number(TxBiasCurrent)*2/1000);
+			this.WorkTemperature 	= transTemperature(Temperature);
+			this.EncryptEnable 		= '-';
+			this.encryptState			= '0';
+			this.GemPortInfo			= '1:1#';
+			this.DispGemPortState = DispGemPortState;
+			this.phyStatus				=	'gpon_phy_up';
+			this.PonUpTime				=	'3600';
+			this.PonMode					=	'1';
+			this.Loid				=	'';
+			this.PonSendBytes 		= '100000';
+			this.PonRecvBytes 		= '200000';
+
+			this.PonUpTime = formatSeconds(this.PonUpTime);
+
+			if ( 'GPON' != this.ponType && 'EPON' != this.ponType )
+				this.ponType = 'GPON';
+			if ( 'GPON' == this.ponType )
+			{
+				this.loidAuth					= '1';
+				this.loidV1						= '';
+			}
+			else
+			{
+				this.loidAuth					= '';
+				this.loidV1						= '';
+			}
+
+			if ( 'up' == this.trafficstate )
+			{
+				this.PonState 				= 'up';
+				this.WarnInfo 				= 'no info';
+				this.loidStatus				= 'up';
+			}
+			else
+			{
+				if ( '0' != this.LinkSta && '2' == this.loidAuth && 0 != this.loidV1.length )
+					this.loidStatus			= 'error';
+			}
+
+			if( '0' != this.LinkSta)
+			{
+				this.SendPower 				= (Math.round(Math.log((Number(TxPower))/10000)/(Math.log(10))*100)/10);
+				this.RecvPower 				= (Math.round(Math.log((Number(RxPower))/10000)/(Math.log(10))*100)/10);
+				this.FECEnable 				= ( '1' == this.fecState ) ? 'enabled' : 'disabled';
+
+				if ( '2' == this.LinkSta )
+					this.EncryptEnable	= ( '1' == this.encryptState ) ? 'enabled' : 'disabled';
+			}
+			function DispGemPortState()
+			{
+				var gemportList;
+				var gemportInfo;
+				var gemportState;
+				var i = 0;
+
+				if ( this.GemPortInfo.indexOf('#') >=0 )
+					this.GemPortInfo = this.GemPortInfo.substring(0, this.GemPortInfo.length - 1);
+				else
+				{
+					document.write('关闭');
+					return -1;
+				}
+
+				gemportList = this.GemPortInfo.split('#');
+				for (i = 0; i < gemportList.length; i ++)
+				{
+					gemportInfo = gemportList[i].split(':');
+					if ( 2 != gemportInfo.length )
+						continue;
+
+					gemportState = 'GEMPORT' + gemportInfo[0] + ':' + ( ( 1 == gemportInfo[1] ) ? '启用' : '关闭' )
+												+ '; '
+					document.write(gemportState);
+				}
+
+				return 0;
+			}
+		}
+
+		var PonInfo = new PonInfoClass();
+
+		var EthernetState = 'down';
+
+function get_pontype()
+{
+  var pon_type = "GPON";
+  if( PonInfo.phyStatus == "gpon_phy_up" || PonInfo.phyStatus == "gpon_phy_down" )
+  	pon_type = "GPON";
+  else if( PonInfo.phyStatus == "epon_phy_up" || PonInfo.phyStatus == "epon_phy_down" )
+  	pon_type = "EPON";
+  	
+  if( PonInfo.PonMode != "1" && PonInfo.PonMode != "2" && PonInfo.PonMode != "0" )
+  {              	
+  	if( PonInfo.PonMode == "6" )
+  		pon_type = "XG-PON";
+    else if( PonInfo.PonMode == "7" )
+        pon_type = "XGS-PON";
+	else if( PonInfo.PonMode == "5" )
+  		pon_type = "EPON";
+	else
+  		pon_type = "10G-EPON";
+  }
+  	
+  /* no pon info */
+  if ( 'down' == PonInfo.phyStatus )
+  {
+  	switch ( PonInfo.PonMode )
+  	{
+  		case "1":
+	  		pon_type = "GPON";
+	  		break;
+			case "2":
+	  		pon_type = "EPON";
+	  		break;
+	  	case "3":
+	  	case "4":
+		  	pon_type = "10G-EPON";
+		  	break;
+	  	case "5":
+		  	pon_type = "EPON";
+		  	break;
+		  case "6":
+		  	pon_type = "XG-PON";
+		  	break;
+		  case "7":
+		  	pon_type = "XGS-PON";
+		  	break;
+  	}
+  }
+  	
+  var is_up_link_sfp_choose = 'No';
+  var is_active_tther_wan = 'No';
+  var ae_wan_speed = 'N/A';
+  if ( is_up_link_sfp_choose == 'Yes' && is_active_tther_wan == 'Yes' )
+  {
+    if ( PonInfo.PonMode == "3" )
+    {
+        if (ae_wan_speed == "1000M")
+        {
+            pon_type = "GE";
+        }
+        else if (ae_wan_speed == "10000M")
+        {
+            pon_type = "10GE";
+        }
+        else
+        {
+            pon_type = "GE/10GE";
+        }
+    }
+  }
+
+  return pon_type;	
+}			
+
+      </SCRIPT>
+        <div class='tab-pane' id="PON链路连接信息_item">
+            <TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+              <TBODY>
+              <TR>
+                <TD>
+                  <DIV id=secPonInfo1>
+                  <div class="scroll-content">
+                  <TABLE id=pon_info name=pon_info class="statblList" border="1">
+                    <TBODY>
+                    <TR>
+                      <th class='table_title' colspan='2' style="text-align: center;">
+					  	网络链路连接信息
+					  </th>
+                    </TR>
+                    <TR>
+                      <TD class=table_title width="20%">PON链路连接状态:</TD>
+                       <TD >
+                        <script language=JavaScript type=text/javascript>
+												if( PonInfo.PonState == "up")
+													document.write("在线");
+												else if ( PonInfo.PonState == "connecting")
+													document.write("连接中");
+												else
+													document.write("离线");
+												</script>
+                    		&nbsp;</TD>
+                    </TR>
+                   <TR>
+                      <TD class=table_title width="20%">线路协议:</TD>
+                       <TD >
+                        <script language=JavaScript type=text/javascript>
+                            document.write(get_pontype());
+                            </script>
+                        &nbsp;</TD>
+                    </TR>
+                      </TBODY></TABLE></div><BR>
+                  <div class="scroll-content">
+                  <TABLE class="statblList" border="1" name="tabPONCount">
+                    <TBODY>
+                    <TR><th class='table_title' colspan='2'>链路性能统计</th>
+                    </TR>
+                    <TR>
+                      <TD class=table_title width="20%">PON口发包数:</TD>
+                      <TD>
+                        <SCRIPT language=JavaScript type=text/javascript>
+												document.write(PonInfo.PonSendPkt);
+												</SCRIPT>
+                        &nbsp;</TD>
+                     </TR>
+                    <TR>
+                      <TD class=table_title>PON口收包数:</TD>
+                      <TD>
+                        <SCRIPT language=JavaScript type=text/javascript>
+												document.write(PonInfo.PonRecvPkt);
+												</SCRIPT>
+                        &nbsp;</TD>
+                     </TR>
+                  </TBODY></TABLE></div><BR>
+                  <div class="scroll-content">
+                  <TABLE class="statblList" border="1" name="tabPONPower">
+                    <TBODY>
+	                    <TR >
+	                    	<th class='table_title' colspan='2'>光模块信息</th>
+	                    </TR>
+                     <TR>
+                      <TD class=table_title width="20%">发送光功率:</TD>
+                      <TD>
+                        <SCRIPT language=JavaScript type=text/javascript>
+												document.write(PonInfo.SendPower);
+												</SCRIPT>dBm
+                        &nbsp;</TD>
+                     </TR>
+                     <TR>
+                      <TD class=table_title>接收光功率:</TD>
+                      <TD>
+                        <SCRIPT language=JavaScript type=text/javascript>
+												document.write(PonInfo.RecvPower);
+												</SCRIPT>dBm
+                        &nbsp;</TD>
+                     </TR>
+                     <TR>
+                      <TD class=table_title>工作电压:</TD>
+                      <TD>
+                        <SCRIPT language=JavaScript type=text/javascript>
+												document.write(PonInfo.WorkVoltage);
+												</SCRIPT>mV
+                        &nbsp;</TD>
+                     </TR>
+                     <TR>
+                      <TD class=table_title>工作电流:</TD>
+                      <TD>
+                        <SCRIPT language=JavaScript type=text/javascript>
+												document.write(PonInfo.WorkElectric);
+												</SCRIPT>mA
+                        &nbsp;</TD>
+                     </TR>
+                     <TR>
+                      <TD class=table_title>工作温度:</TD>
+                      <TD>
+                        <SCRIPT language=JavaScript type=text/javascript>
+												document.write(PonInfo.WorkTemperature);
+												</SCRIPT>℃
+                        &nbsp;</TD>
+                     </TR>
+                      </TBODY>
+                     </TABLE>
+                     </div>
+                  </TD>
+                </TR>
+              </TBODY>
+            </TABLE>
+        </div>
+</div>
+</BODY>
+</HTML>

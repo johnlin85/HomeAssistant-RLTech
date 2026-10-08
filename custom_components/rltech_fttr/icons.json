@@ -1,0 +1,132 @@
+{
+  "entity": {
+    "button": {
+      "ap_reboot": {
+        "default": "mdi:restart"
+      },
+      "ac_reboot": {
+        "default": "mdi:restart"
+      }
+    },
+    "sensor": {
+      "ap_count": {
+        "default": "mdi:access-point-network"
+      },
+      "online_ap_count": {
+        "default": "mdi:wifi-check"
+      },
+      "reported_station_count": {
+        "default": "mdi:wifi"
+      },
+      "poll_duration": {
+        "default": "mdi:timer-outline"
+      },
+      "last_boot": {
+        "default": "mdi:restart"
+      },
+      "cpu_usage": {
+        "default": "mdi:cpu-64-bit"
+      },
+      "memory_usage": {
+        "default": "mdi:memory"
+      },
+      "cpu_temperature": {
+        "default": "mdi:thermometer"
+      },
+      "system_uptime": {
+        "default": "mdi:timer-sand"
+      },
+      "ap_online": {
+        "default": "mdi:wifi-check",
+        "state": {
+          "online": "mdi:wifi-check",
+          "offline": "mdi:wifi-off"
+        }
+      },
+      "ap_assoc_count": {
+        "default": "mdi:account-network"
+      },
+      "ap_profile": {
+        "default": "mdi:wifi-cog"
+      },
+      "ap_alias": {
+        "default": "mdi:tag-outline"
+      },
+      "ap_optical_rx_power": {
+        "default": "mdi:download-network"
+      },
+      "ap_optical_tx_power": {
+        "default": "mdi:upload-network"
+      },
+      "ap_reg_off_time": {
+        "default": "mdi:clock-outline"
+      },
+      "ap_last_off_reason": {
+        "default": "mdi:alert-circle-outline"
+      },
+      "ap_source_host": {
+        "default": "mdi:server-network"
+      },
+      "flash_usage": {
+        "default": "mdi:harddisk"
+      },
+      "lanpon_port_link": {
+        "default": "mdi:lan-connect",
+        "state": {
+          "connected": "mdi:lan-connect",
+          "disconnected": "mdi:lan-disconnect"
+        }
+      },
+      "lanpon_port_tx_power": {
+        "default": "mdi:upload-network"
+      },
+      "lanpon_port_rx_power": {
+        "default": "mdi:download-network"
+      },
+      "lanpon_port_temperature": {
+        "default": "mdi:thermometer"
+      },
+      "lanpon_port_voltage": {
+        "default": "mdi:flash"
+      },
+      "lanpon_port_bias_current": {
+        "default": "mdi:current-dc"
+      },
+      "pon_link_type": {
+        "default": "mdi:wan"
+      },
+      "pon_online_status": {
+        "default": "mdi:lan-connect",
+        "state": {
+          "online": "mdi:lan-connect",
+          "connecting": "mdi:lan-pending",
+          "offline": "mdi:lan-disconnect"
+        }
+      },
+      "pon_tx_power": {
+        "default": "mdi:upload-network"
+      },
+      "pon_rx_power": {
+        "default": "mdi:download-network"
+      },
+      "pon_temperature": {
+        "default": "mdi:thermometer"
+      },
+      "pon_voltage": {
+        "default": "mdi:flash"
+      },
+      "pon_bias_current": {
+        "default": "mdi:current-dc"
+      }
+    },
+    "switch": {
+      "web_polling": {
+        "default": "mdi:web-sync",
+        "state": {
+          "on": "mdi:web-sync",
+          "off": "mdi:web-off"
+        }
+      }
+    }
+  }
+}

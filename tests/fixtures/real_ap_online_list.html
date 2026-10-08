@@ -1,0 +1,1130 @@
+<!--
+REAL SAMPLE (sanitized) - RLTech AC 8080 Web UI, captured 2026-09-29 (phase 0) from WAN http://<AC-WAN>:8080.
+Source page: /cgi-bin/ap_online_list.asp   Capture: POST, same fields as fetch_ap_page (pageidx_rows=1,10000, upgrade_mac=0, delete=0); no task queued
+Firmware: AC hw V0.1.0 / sw V0.0.30 (lan_num=6, lan_pon_num=2); APs FS8820A V0.1.21, RL820GW-AX3 V0.0.51.
+Page content is byte-for-byte what boa returned except for these substitutions (same rules in every real_* file):
+  - Vendor OUI E0:21:FE kept; the device-specific (NIC) part of each MAC is replaced:
+      AP-A (FS8820A)      -> E0:21:FE:A0:A0:0x  (base MAC ..:00, BSSIDs ..:04/..:05)
+      AP-B (RL820GW-AX3)  -> E0:21:FE:B0:B0:0x
+      AC (LAN ..:00, WAN ..:02) -> E0:21:FE:C0:C0:0x
+    The same NIC substitution is applied everywhere the MAC is embedded: PON SN (RLGMFEA0A000 /
+    RLGMFEB0B000, sn_address RLGM-FEA0A000), DevName/HostName (FTTRSub_A0A000 / FTTRSub_B0B000),
+    EUI-64 IPv6 (...:fea0:a000). Upper/lower case and colon/no-colon style of the original are kept.
+  - Other (client) MACs -> 02:00:00:00:00:NN, numbered in first-seen order across all real_* files.
+  - DevSN: AP-A -> RLGM00000000001, AP-B -> RL00000000002; AC serial -> RL0000000000003 (lengths kept).
+  - IPv4: AC LAN /24 -> 192.0.2.X, AC WAN /24 -> 198.51.100.X, AP-A mgmt /24 -> 203.0.113.X
+    (last octet kept, so AP-B = 192.0.2.10, AP-A = 192.0.2.4, AC LAN = 192.0.2.1). Masks kept.
+  - Client IPv6 link-local (other than fe80::1) -> fe80::2:0:0:NN.
+  - UUIDs (AP Fingerprint, task SeqId) -> 00000000-0000-4000-8000-0000000000NN.
+  - Client host names -> client-host-NN; SSID -> TEST_SSID / TEST_SSID_5G.
+  - No ecntToken, cookie or password appears in these pages (checked); nothing else was removed.
+-->
+<HTML>
+<HEAD>
+    <META http-equiv=Content-Language content=zh-cn>
+    <META http-equiv=Content-Type content="text/html; charset=utf8">
+    <LINK href="/JS/stylemain.css" type=text/css rel=stylesheet>
+    <link href="/JS/tabler.min.css" type=text/css rel=stylesheet>
+    <link href="/bootstrap-4.6.2/css/bootstrap.min.css" type=text/css rel=stylesheet>
+    <link href="/bootstrap-4.6.2/font/bootstrap-icons.css" type=text/css rel=stylesheet>
+    <SCRIPT language=javascript src="/JS/util.js"></SCRIPT>
+    <SCRIPT language=javascript src="/JS/json2.js"></SCRIPT>
+    <SCRIPT language=javascript src="/JS/jquery.js"></SCRIPT>
+    <SCRIPT language=javascript src="/JS/tabler.min.js"></SCRIPT>
+    <SCRIPT language=javascript src="/JS/jquery-1.10.2.min.js"></SCRIPT>
+    <script language=javascript src="/bootstrap-4.6.2/js/bootstrap.bundle.min.js"></script>
+    <META content="MSHTML 6.00.6000.16809" name=GENERATOR>
+</HEAD>
+<BODY>
+    <script language="JavaScript" type="text/javascript">
+        
+        
+
+        var AP_manage = '{ "respCode":0, "pageIdx":1, "pageLines":10000, "filterKey":"", "filterValue":"", "total":2, "count":2, "data":{ "list":[ { "Model":"FS8820A", "IP":"192.0.2.4", "Version":"V0.1.21", "Mac":"E021FEA0A000", "Status":"1", "Profile":"Default", "ChannelG24":"3", "ChannelG5":"36", "Assoc":"1", "Alias":"", "BssidG24":"E021FEA0A004", "BssidG5":"E021FEA0A005", "Uplink":"2", "UplinkPort":"6", "SN":"RLGMFEA0A000", "DevSN":"RLGM00000000001", "UpgradeFlag":"1", "ProfileIdx":"1", "OptTxPower":"", "OptRxPower":"" }, { "Model":"RL820GW-AX3", "IP":"192.0.2.10", "Version":"V0.0.51", "Mac":"E021FEB0B000", "Status":"1", "Profile":"Default", "ChannelG24":"9", "ChannelG5":"52", "Assoc":"4", "Alias":"820", "BssidG24":"E021FEB0B004", "BssidG5":"E021FEB0B005", "Uplink":"2", "UplinkPort":"6", "SN":"RLGMFEB0B000", "DevSN":"RL00000000002", "UpgradeFlag":"1", "ProfileIdx":"1", "OptTxPower":"-2.60", "OptRxPower":"-14.40" } ] } } ';
+        var ret = JSON.parse(AP_manage);
+
+        var list = '{ "respCode":3, "failreason":"ACAP_DB_SELECT_NULL" } ';
+        var task_list = JSON.parse(list);
+
+        if ( ret.respCode == "3" || ret == null)
+        {
+            var hang_num = 10; //当前每页的行数
+            var num = 0; //当前总共有多少页
+            ret.total = 0 ;
+        }
+        else
+        {
+            var hang_num = ret.pageLines; //当前每页的行数
+            var num = Math.ceil(ret.total / hang_num); //当前总共有多少页
+            var FilterValue_From_Json = ret.filterValue;
+        }
+        $(function () {
+
+            //在iframe中调用父页面中定义的方法
+            if ( ret.respCode == "3" )
+                parent.childConsole(0)
+            else
+                parent.childConsole(ret.total);
+        });
+
+
+        function Set_refresh() {
+            top.Content_time_s = document.getElementById("auto_refresh").value ;
+            var time = top.Content_time_s
+            if (time > 4 && time < 61) 
+            {
+                setTimeout(function () {gopage()}, time * 1000);
+            }
+            else
+                return;
+        }
+
+        function filtration() {
+            document.ConfigForm.pageidx_rows.value = 1 + ',' + 10;
+            search_filterKey();
+            if (true == setEBooValueCookie_utf8(document.ConfigForm))
+                document.ConfigForm.submit()
+        }
+
+        function gopage() {
+            var pages = document.getElementById("txtCurPageIndex").value;//输入页码
+            var pages_hang = document.getElementById("txtMaxRows").value;//输入行数
+            var total_info = pages_hang * pages - pages_hang;
+
+            if (total_info < ret.total || pages == 1) {
+                ret.pageLines = parseInt(pages_hang); //修改后的每页的行数
+                ret.pageIdx = parseInt(pages);  //修改后的当前所在的页码
+                document.ConfigForm.txtMaxRows.value = pages_hang;
+                document.ConfigForm.txtCurPageIndex.value = pages;
+
+                // 把页码和行数用,拼接
+                document.ConfigForm.pageidx_rows.value = pages + ',' + pages_hang;
+                search_filterKey();
+                if (true == setEBooValueCookie_utf8(document.ConfigForm))
+                    document.ConfigForm.submit()
+            }
+            else {
+                alert("请输入正确的行数与页码")
+            }
+        }
+
+        function firstpage() {
+            var pages_hang = document.getElementById("txtMaxRows").value ;
+
+            document.ConfigForm.pageidx_rows.value = 1 + ',' + pages_hang;
+            search_filterKey();
+
+            if (true == setEBooValueCookie_utf8(document.ConfigForm))
+                document.ConfigForm.submit()
+        }
+        function pageup1() {
+            var pages = parseInt(document.getElementById("txtCurPageIndex").value) - 1;
+            var pages_hang = document.getElementById("txtMaxRows").value ;
+
+            if (pages < 1)
+                alert("目前已经是首页");
+            else {
+                document.ConfigForm.pageidx_rows.value = pages + ',' + pages_hang;
+                search_filterKey();
+
+                if (true == setEBooValueCookie_utf8(document.ConfigForm))
+                    document.ConfigForm.submit()
+            }
+
+
+        }
+
+        var bind_window;
+        function Click_s(e) {
+            var id = e.getAttribute("id") ;
+            var i = parseInt(id[3]) -1 ;
+            var Mac_s = ret.data.list[i].Mac;
+            var sn_s = ret.data.list[i].SN;
+            var key = Mac_s + '_' + sn_s ;
+            str_params = 1 + ',' + 64 ;
+
+			if (bind_window)
+			{
+				bind_window.close();
+			}
+            bind_window=window.open('ap_online_bind.asp?param1='+key+'&param2='+ret.data.list[i].Profile+'&param3='+str_params+'','bind_window','height=750px, width=800px, top=100, left=350, toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no');
+            setTimeout(function(){bind_window.document.title = "绑定模板"},150);
+        }
+
+
+
+
+var detail_window;
+function displayWindow(abc)
+{
+    var value = abc.getAttribute("value");
+    var i = value;
+	var Mac_s = ret.data.list[i].Mac ;
+	var sn_s = ret.data.list[i].SN ; 
+	var key = Mac_s + '_' + sn_s ;
+
+	if (detail_window)
+	{
+		detail_window.close();
+	}
+    detail_window=window.open('ap_online_detail.asp?param1='+key+'&param2='+sn_s+'','detail_window','height=500px, width=500, top=100, left=350, toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no');
+    setTimeout(function(){detail_window.document.title = "详细信息"},150);
+
+}
+
+
+var alias_window;
+function update_alias_Window(abc,num)
+{
+    var value = abc.getAttribute("value");
+    var i = value;
+	var Mac_s = ret.data.list[i].Mac;
+	var sn_s = ret.data.list[i].SN;
+	var key = Mac_s + '_' + sn_s;
+	var alias = (num == 0) ? "" : ret.data.list[i].Alias;
+
+	if (alias_window)
+	{
+		alias_window.close();
+	}
+    alias_window=window.open('ap_update_alias.asp?param1='+key+'&param2='+alias+'','alias_window','height=300px, width=500, top=100, left=400, toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no');
+    setTimeout(function(){alias_window.document.title = "备注"},150);
+
+}
+
+
+
+
+
+        function pagedown1() {
+            var pages = parseInt(document.getElementById("txtCurPageIndex").value) + 1;
+            var pages_total = num;
+            var pages_hang = document.getElementById("txtMaxRows").value ;
+
+            if (pages > pages_total)
+                alert("目前已经是末页");
+            else {
+                document.ConfigForm.pageidx_rows.value = pages + ',' + pages_hang;
+                search_filterKey();
+
+                if (true == setEBooValueCookie_utf8(document.ConfigForm))
+                    document.ConfigForm.submit()
+            }
+        }
+        function lastpage() {
+            var pages_hang = document.getElementById("txtMaxRows").value ;
+
+            document.ConfigForm.pageidx_rows.value = num + ',' + pages_hang;
+            search_filterKey();
+
+            if (true == setEBooValueCookie_utf8(document.ConfigForm))
+                document.ConfigForm.submit()
+        }
+
+        function clicks(obj) {
+            var i = 0;
+            var num = 0;                        //没有选中的数量
+            var id = obj.getAttribute("id"); //获取传入的id
+            var IsCheck = obj.getAttribute("val"); //获取传入的val
+
+            if (IsCheck == "1") {
+                $("#" + id).css("background-color", "");
+                $("#" + id).attr("val", "0");
+                setDisable('bind_config', 0);
+            } else {
+                $("#" + id).css("background-color", "#00ccff");
+                $("#" + id).attr("val", "1");
+            }
+
+            for (i; i < ret.data.list.length; i++) {
+                var j = 'row';
+                var q = i + 1;
+                var id = j + q;
+
+                if (document.getElementById(id).getAttribute("val") == "0")
+                    num = num + 1;
+            }
+
+            if (num == ret.data.list.length) {
+                document.getElementById("bind_config").setAttribute("disabled", false);
+                document.getElementById("bind_config").style.backgroundColor = "gray";
+
+                document.getElementById("version_upgrade").setAttribute("disabled", false);
+                document.getElementById("version_upgrade").style.backgroundColor = "gray";
+
+               // document.getElementById("config_cogradient").setAttribute("disabled", false);
+               // document.getElementById("config_cogradient").style.backgroundColor = "gray";
+
+                document.getElementById("config_delete").setAttribute("disabled", false);
+                document.getElementById("config_delete").style.backgroundColor = "gray";
+
+                document.getElementById("config_multi_reboot").setAttribute("disabled", false);
+                document.getElementById("config_multi_reboot").style.backgroundColor = "gray";
+
+                document.getElementById("config_multi_restore").setAttribute("disabled", false);
+                document.getElementById("config_multi_restore").style.backgroundColor = "gray";
+
+                //document.getElementById("sysinfo_export").setAttribute("disabled", false);
+                //document.getElementById("sysinfo_export").style.backgroundColor = "gray";
+            }
+            else {
+                document.getElementById("bind_config").style.backgroundColor = "#4acbd6";
+                document.getElementById("bind_config").removeAttribute("disabled");
+
+                document.getElementById("version_upgrade").style.backgroundColor = "#4acbd6";
+                document.getElementById("version_upgrade").removeAttribute("disabled");
+
+              //  document.getElementById("config_cogradient").style.backgroundColor = "#4acbd6";
+              //  document.getElementById("config_cogradient").removeAttribute("disabled");
+
+                document.getElementById("config_delete").style.backgroundColor = "#D63939";
+                document.getElementById("config_delete").removeAttribute("disabled");
+
+                document.getElementById("config_multi_reboot").style.backgroundColor = "#4acbd6";
+                document.getElementById("config_multi_reboot").removeAttribute("disabled");
+
+                document.getElementById("config_multi_restore").style.backgroundColor = "#4acbd6";
+                document.getElementById("config_multi_restore").removeAttribute("disabled");
+
+                //document.getElementById("sysinfo_export").style.backgroundColor = "#4acbd6";
+                //document.getElementById("sysinfo_export").removeAttribute("disabled");
+            }
+
+        }
+
+        function selectall() {
+            var i = 0;
+            var selectflag;
+            var total_num = ret.total; //总共有多少条数据
+            document.getElementById("op_selctall").value == "取消" ? selectflag = "全选" : selectflag = "取消";
+            document.getElementById("op_selctall").value = selectflag;
+
+            for (i = 0; i < ret.count; i++) {
+                var j = 'row';
+                var q = i + 1;
+                var id = j + q;
+
+                var tr = document.getElementById(id);
+                var IsCheck = tr.getAttribute("val");
+
+                if ((IsCheck == "0" && selectflag == "取消") || (IsCheck == "1" && selectflag == "全选")) {
+                    clicks(tr);
+                }
+                else
+                    continue;
+
+            }
+        }
+
+        function open_bind_config_comment() 
+        {
+            var str_params ;
+            var pageidx_rows ;
+            var bind_ap = 0;
+            var i = 0 ;
+            var Mac_s ;
+            var sn_s ;
+            var k=0 ;
+            var key ;
+            var Profile ;
+            str_params = 1 + ',' + 64 ;
+            for (i; i < ret.data.list.length; i++) 
+            {
+                var j = 'row';
+                var q = i + 1;
+                var id = j + q;
+                
+
+                if (document.getElementById(id).getAttribute("val") == "1")
+                {
+                    k = k +1 ;
+                    Mac_s = ret.data.list[i].Mac ;
+                    sn_s = ret.data.list[i].SN ; 
+                    key = Mac_s + '_' + sn_s ;
+                    Profile = ret.data.list[i].Profile ;
+
+                    if ( bind_ap == 0  )
+                        bind_ap = q;
+                    else
+                        bind_ap = bind_ap + ',' + q ;
+                }
+            }
+            
+            if (bind_window)
+            {
+                bind_window.close();
+            }
+            if ( k > 1 )
+            {
+                pageidx_rows = ret.pageIdx + ',' + ret.pageLines ;
+                bind_window=window.open('ap_online_bind_common.asp?param1='+pageidx_rows+'&param2=Default&param3='+str_params+'&param4='+bind_ap+'','bind_window','height=750px, width=800px, top=100, left=350, toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no');
+                setTimeout(function(){bind_window.document.title = "绑定模板"},150);
+            }
+            else
+            {
+                bind_window=window.open('ap_online_bind.asp?param1='+key+'&param2='+Profile+'&param3='+str_params+'','','height=750px, width=800px, top=100, left=350, toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no');
+                        setTimeout(function(){bind_window.document.title = "绑定模板"},150);
+            }
+        }
+
+        function op_update()
+        {
+            displayWindow_s();
+        }
+
+        function submitF () {
+            if ( confirm("确定要进行升级") == true )
+            {
+                var i = 0 ;
+                var t = 0 ;
+                var Status_Upgrade ;
+                var Status_Reboot ;
+                var Status_Restore ;
+                var action ;
+                var mac_s ;
+                var str_mac = 0;
+                var url = document.getElementById("FirmwareUrl").value ;
+                var FtpUser = document.getElementById("FtpUser").value ;
+                var FtpPwd = document.getElementById("FtpPwd").value ;
+                var tmpArr = url.split("//");
+                var tmpArr_s = url.split("/");
+                initFormElemBorderAndTip(ConfigForm);
+                FirmwareUrl.style.borderColor = "";
+                if ( tmpArr[1] == null || tmpArr[1] == "" || tmpArr_s[3] == null || tmpArr_s[3] == "" )/*判断url格式是否正确*/
+                {
+                    setInputBorderColorAndTipByEl(FirmwareUrl);
+                    alert("url格式错误")
+                    return 0 ;
+                }
+
+                for (i; i < ret.data.list.length; i++) 
+                {
+                    var j = 'row';
+                    var q = i + 1;
+                    var id = j + q;
+
+                    if (document.getElementById(id).getAttribute("val") == "1")
+                    {
+                        if ( ret.data.list[i].Status == "0" )
+                        {
+                            alert("选中的AP设备中存在离线的设备，无法下发升级任务")
+                            return 0 ;
+                        }
+                        mac_s = ret.data.list[i].Mac ;
+
+                        for ( t ; t < task_list.count ; t++ )
+                        {
+                            if( task_list.data.list[t].Mac == mac_s )
+                            {
+                                Status_Upgrade = task_list.data.list[t].UpgradeStatus ;
+                                Status_Reboot = task_list.data.list[t].RebootStatus ;
+                                Status_Restore = task_list.data.list[t].RestoreStatus ;
+                                action = task_list.data.list[t].Action ;
+
+                                if ( action == "1" )
+                                {
+                                    if ( Status_Upgrade != "0" && Status_Upgrade != "1" && Status_Upgrade != "4" && Status_Upgrade != "5")
+                                    {
+                                        alert("选中的AP设备中存在正在执行升级任务的设备，无法下发恢复出厂任务")
+                                        return 0 ;
+                                    }
+                                }
+                                else if ( action == "2" )
+                                {
+                                    if ( Status_Reboot != "1" && Status_Reboot != "2")
+                                    {
+                                        alert("选中的AP设备中存在正在执行重启的设备，无法下发恢复出厂任务")
+                                        return 0 ;
+                                    }
+                                }
+                                else if ( action == "3" )
+                                {
+                                    if ( Status_Restore != "1" && Status_Restore != "2")
+                                    {
+                                        alert("选中的AP设备中存在正在执行恢复出厂任务的设备，无法下发恢复出厂任务")
+                                        return 0 ;
+                                    }
+                                }
+                            }
+                        }
+                        if ( str_mac == 0)
+                            str_mac = mac_s
+                        else
+                            str_mac = str_mac + ',' + mac_s ;
+                    }
+                }
+
+                document.getElementById("upgrade_mac").value = str_mac;
+                document.getElementById("upgrade_action").value = 1 + ',' + url + ',' + FtpUser + ',' +FtpPwd;
+                gopage();
+            }
+        }
+
+        function op_config() {
+
+            if (true == setEBooValueCookie_utf8(document.ConfigForm))
+                document.ConfigForm.submit()
+        }
+
+        function op_delete() {
+
+            var i = 0 ;
+            var mac_s =0;
+            var str = 0;
+            var key = 0 ;
+            var sn_s = 0 ;
+
+            for (i; i < ret.data.list.length; i++) 
+            {
+                var j = 'row';
+                var q = i + 1;
+                var id = j + q;
+
+                if (document.getElementById(id).getAttribute("val") == "1")
+                {
+                    if ( ret.data.list[i].Status == "1" )
+                    {
+                        alert("只允许删除离线设备")
+                        return 0
+                    }
+
+                    mac_s = ret.data.list[i].Mac ;
+                    sn_s  = ret.data.list[i].SN ;
+                    key = mac_s + '_' + sn_s ;
+                    if ( str == 0)
+                        str = key ;
+                    else
+                        str = str + ',' + key ;
+                }
+            }
+            document.getElementById("delete").value = str;
+            gopage();
+        }
+
+        function op_reboot() 
+        {
+            var i = 0 ;
+            var t = 0 ;
+            var Status_Upgrade ;
+            var Status_Reboot ;
+            var Status_Restore ;
+            var action ;
+            var mac_s ;
+            var str_mac = 0;
+            if ( confirm("确定要进行重启") == true )
+            {
+                for (i; i < ret.data.list.length; i++) 
+                {
+                    var j = 'row';
+                    var q = i + 1;
+                    var id = j + q;
+
+                    if (document.getElementById(id).getAttribute("val") == "1")
+                    {
+                        if ( ret.data.list[i].Status == "0" )
+                        {
+                            alert("选中的AP设备中存在离线的设备，无法下发重启任务")
+                            return 0 ;
+                        }
+                        mac_s = ret.data.list[i].Mac ;
+                        mac_s = mac_s.replaceAll(":","");
+                        
+                        for ( t ; t < task_list.count ; t++ )
+                        {
+                            if( task_list.data.list[t].Mac == mac_s )
+                            {
+                                Status_Upgrade = task_list.data.list[t].UpgradeStatus ;
+                                Status_Reboot = task_list.data.list[t].RebootStatus ;
+                                Status_Restore = task_list.data.list[t].RestoreStatus ;
+                                action = task_list.data.list[t].Action ;
+
+                                if ( action == "1" )
+                                {
+                                    if ( Status_Upgrade != "0" && Status_Upgrade != "1" && Status_Upgrade != "4" && Status_Upgrade != "5")
+                                    {
+                                        alert("选中的AP设备中存在正在执行升级任务的设备，无法下发恢复出厂任务")
+                                        return 0 ;
+                                    }
+                                }
+                                else if ( action == "2" )
+                                {
+                                    if ( Status_Reboot != "1" && Status_Reboot != "2")
+                                    {
+                                        alert("选中的AP设备中存在正在执行重启的设备，无法下发恢复出厂任务")
+                                        return 0 ;
+                                    }
+                                }
+                                else if ( action == "3" )
+                                {
+                                    if ( Status_Restore != "1" && Status_Restore != "2")
+                                    {
+                                        alert("选中的AP设备中存在正在执行恢复出厂任务的设备，无法下发恢复出厂任务")
+                                        return 0 ;
+                                    }
+                                }
+                            }
+                        }
+
+                        if ( str_mac == 0)
+                            str_mac = mac_s
+                        else
+                            str_mac = str_mac + ',' + mac_s ;
+                    }
+                }
+                document.getElementById("upgrade_mac").value = str_mac;
+                document.getElementById("upgrade_action").value = 2;
+                gopage();
+            }
+        }
+
+        function op_restore()
+        {
+            var i = 0 ;
+            var t = 0 ;
+            var Status_Upgrade ;
+            var Status_Reboot ;
+            var Status_Restore ;
+            var action ;
+            var mac_s ;
+            var str_mac = 0;
+
+            if ( confirm("确定要进行恢复出厂") == true )
+            {
+                for (i; i < ret.data.list.length; i++) 
+                {
+                    var j = 'row';
+                    var q = i + 1;
+                    var id = j + q;
+
+                    if (document.getElementById(id).getAttribute("val") == "1")
+                    {
+                        if ( ret.data.list[i].Status == "0" )
+                        {
+                            alert("选中的AP设备中存在离线的设备，无法下发恢复出厂任务")
+                            return 0 ;
+                        }
+                        mac_s = ret.data.list[i].Mac ;
+                        mac_s = mac_s.replaceAll(":","");
+
+                        for ( t ; t < task_list.count ; t++ )
+                        {
+                            if( task_list.data.list[t].Mac == mac_s )
+                            {
+                                Status_Upgrade = task_list.data.list[t].UpgradeStatus ;
+                                Status_Reboot = task_list.data.list[t].RebootStatus ;
+                                Status_Restore = task_list.data.list[t].RestoreStatus ;
+                                action = task_list.data.list[t].Action ;
+
+                                if ( action == "1" )
+                                {
+                                    if ( Status_Upgrade != "0" && Status_Upgrade != "1" && Status_Upgrade != "4" && Status_Upgrade != "5")
+                                    {
+                                        alert("选中的AP设备中存在正在执行升级任务的设备，无法下发恢复出厂任务")
+                                        return 0 ;
+                                    }
+                                }
+                                else if ( action == "2" )
+                                {
+                                    if ( Status_Reboot != "1" && Status_Reboot != "2")
+                                    {
+                                        alert("选中的AP设备中存在正在执行重启的设备，无法下发恢复出厂任务")
+                                        return 0 ;
+                                    }
+                                }
+                                else if ( action == "3" )
+                                {
+                                    if ( Status_Restore != "1" && Status_Restore != "2")
+                                    {
+                                        alert("选中的AP设备中存在正在执行恢复出厂任务的设备，无法下发恢复出厂任务")
+                                        return 0 ;
+                                    }
+                                }
+                            }
+                        }
+
+                        if ( str_mac == 0)
+                            str_mac = mac_s
+                        else
+                            str_mac = str_mac + ',' + mac_s ;
+                    }
+                }
+                document.getElementById("upgrade_mac").value = str_mac;
+                document.getElementById("upgrade_action").value = 3;
+                gopage();
+            }
+        }
+
+        function op_export() {
+
+            if (true == setEBooValueCookie_utf8(document.ConfigForm))
+                document.ConfigForm.submit()
+        }
+
+        function myrefresh() 
+        {
+
+            gopage();
+        }
+
+        function changekey()
+        {
+            top.Content_filter_s = document.getElementById("search_item").value ;
+            var m='';
+            
+            document.getElementById("keywords").innerHTML = m;
+            
+            if ( top.Content_filter_s == "4" )
+            {
+                m+='<select style="display: inline;" class="form-select" name="search_condition" id="search_condition" >';
+                m+='<option value=0>'+'离线'+'</option>';
+                m+='<option value=1>'+'在线'+'</option>';
+                m+='<option value=2>'+'全部'+'</option>'
+                m+='</select>';
+            }
+            else
+            {
+                m+='<input maxlength="128" name="search_condition" id="search_condition" value="" >'
+            }
+            
+            document.getElementById("keywords").innerHTML = m;
+            return 0;
+        }
+
+        function search_filterKey()
+        {
+            var filter_key = new Array("Model", "IP", "Version", "Mac", "Status", "Profile", "ChannelG24", "ChannelG5","Assoc", "Alias");
+            var select_filterkey = document.getElementById("search_item").value;
+            var select_filtervalue = document.getElementById("search_condition").value;
+
+            if ( select_filterkey == "4" && select_filtervalue == "2")
+            {
+                return 0 ;
+            }
+
+            if ( select_filtervalue != null)
+            {
+                if ( select_filterkey == "3" )
+                {
+                    select_filtervalue = select_filtervalue.replaceAll(":","");
+                }
+                document.ConfigForm.filterkey_value.value = filter_key[select_filterkey] + ',' + select_filtervalue;
+                top.Content_filter_s_condition = document.getElementById("search_condition").value;
+            }
+            else
+                return 0 ;
+
+
+        }
+
+        function show_all() {
+
+            var pages = document.getElementById("txtCurPageIndex").value;//输入页码
+            var pages_hang = document.getElementById("txtMaxRows").value;//输入行数
+            var total_info = pages_hang * pages - pages_hang;
+
+            if (total_info < ret.total || pages == 1)
+            {
+                ret.pageLines = parseInt(pages_hang); //修改后的每页的行数
+                ret.pageIdx = parseInt(pages);  //修改后的当前所在的页码
+                document.ConfigForm.txtMaxRows.value = pages_hang;
+                document.ConfigForm.txtCurPageIndex.value = pages;
+
+                // 把页码和行数用,拼接
+                document.ConfigForm.pageidx_rows.value = pages + ',' + pages_hang;
+               // top.Content_filter_s_condition = 0;
+                top.Content_filter_s = 0 ;
+
+                if (true == setEBooValueCookie_utf8(document.ConfigForm))
+                    document.ConfigForm.submit()
+            }
+            else 
+            {
+                alert("请输入正确的行数与页码")
+            }
+        }
+    </script>
+
+    <tr>
+        <td>&nbsp;</td>
+    </tr>
+
+    <FORM name=ConfigForm id='ConfigForm' action="/cgi-bin/ap_online_list.asp" method="post">
+        <TABLE cellspacing=0 cellPadding=0  border=0 width=100% align="center">
+            <TBODY>
+            <TD vAlign=top>
+            <TR id=search_index class="noteCell">
+                <input type=hidden name="pageidx_rows" id="pageidx_rows" value=0>
+                <input type=hidden name="filtervalue" id="filtervalue" >
+                <input type=hidden name="filterkey_value" id="filterkey_value" >
+                <input type=hidden name="upgrade_mac" id="upgrade_mac" value = "0">
+                <input type=hidden name="upgrade_action" id="upgrade_action" >
+                <input type=hidden name="delete" id="delete" value = "0">
+                <TD colSpan=3 align="left">按关键字过滤：
+                <select style="display: inline;" class="form-select" name=search_item id=search_item onchange=changekey()>
+                <SCRIPT language=JavaScript type=text/javascript>
+                var filter_name  = new Array('AP型号','IP地址','AP版本号','MAC','状态','配置模板','信道','5G信道','AP客户端数量');
+                for (i = 0; i < 9; i++)
+                {
+                    if( i == top.Content_filter_s)
+                        document.write('<option value=' + i + ' selected>' + filter_name[i] + '</option>');
+                    else
+                        document.write('<option value=' + i + '>' + filter_name[i] + '</option>');
+                }
+                </SCRIPT>
+                 </select>
+                关键字：
+                <span id=keywords>
+                <SCRIPT>
+                var i = 0 ;
+                var status = new Array("在线","离线","全部");
+                if ( top.Content_filter_s == "4" )
+                {
+                    document.write('<select style="display: inline;" class="form-select"name="search_condition" id="search_condition" >');
+                    
+                        if ( FilterValue_From_Json == "0" )
+                        {
+                            document.write('<option value=0 selected>'+'离线'+'</option>');
+                            document.write('<option value=1 >'+'在线'+'</option>');
+                            document.write('<option value=2 >'+'全部'+'</option>');
+                        }
+                        else if ( FilterValue_From_Json == "1" )
+                        {
+                            document.write('<option value=0 >'+'离线'+'</option>');
+                            document.write('<option value=1 selected>'+'在线'+'</option>');
+                            document.write('<option value=2 >'+'全部'+'</option>');
+                        }
+                        else
+                        {
+                            document.write('<option value=0 >'+'离线'+'</option>');
+                            document.write('<option value=1 >'+'在线'+'</option>');
+                            document.write('<option value=2 selected>'+'全部'+'</option>');
+                        }
+                    document.write('</select>');
+                }
+                else
+                {
+                    if ( ret.respCode == "3" )
+                        document.write( '<input maxlength="128" name="search_condition" id="search_condition" value="" >');
+                    else
+                        document.write( '<input maxlength="128" name="search_condition" id="search_condition" value="' + FilterValue_From_Json + '" >');
+                }
+                </SCRIPT>
+                </span>
+                <INPUT type=button name=search_start id=search_start class="BtnAdd btn btn-dark btn-pill" value="查询" onClick=filtration()>
+                <INPUT type=button name=search_stop id=search_stop class="BtnAdd btn btn-dark btn-pill" value="显示全部"  onClick=show_all()>
+                &nbsp;&nbsp;自动刷新(秒)：
+                <select style="display: inline;" class="form-select" name=auto_refresh id=auto_refresh onchange=Set_refresh()>
+                    <SCRIPT language=JavaScript type=text/javascript>
+                    var time ;
+                    document.write('<option value="0">' +'禁止'+ '</option>');
+                    for (i = 1; i < 13; i++)
+                    {
+                        time = i*5;
+                        if( time == top.Content_time_s)
+                            document.write('<option value=' + time + ' selected>' + time + '</option>');
+                        else
+                            document.write('<option value=' + time + '>' + time + '</option>');
+                    
+                    }
+                    </SCRIPT>
+                    
+                </select>
+                </TD>
+            </TR>
+            </TD>
+            </TBODY>
+        </TABLE><br>
+    <div style="overflow-y: auto; max-height: 700px;">
+        <table cellspacing=0 cellPadding=7 border=1 width=100% align="center" border="4" style="collapse;border-top: 0px; border-bottom: 0;">
+            <thead>
+                <tr>
+                    <th style="position: sticky; top: -1; text-align: center; width: 59px;" class=table_title align=middle>序号</th>
+                    <th style="position: sticky; top: -1; text-align: center;" class=table_title align=middle>AP型号</th>
+                    <th style="position: sticky; top: -1; text-align: center;" class=table_title align=middle>IP地址</th>
+                    <th style="position: sticky; top: -1; text-align: center;" class=table_title align=middle>AP版本号</th>
+                    <th style="position: sticky; top: -1; text-align: center;" class=table_title align=middle>MAC &nbsp;</td>
+                    <th style="position: sticky; top: -1; text-align: center;" class=table_title align=middle>状态</th>
+                    <th style="position: sticky; top: -1; text-align: center;" class=table_title align=middle>配置模板</th>
+                    <th style="position: sticky; top: -1; text-align: center;" class=table_title align=middle>信道</th>
+                    <th style="position: sticky; top: -1; text-align: center;" class=table_title align=middle>5G信道</th>
+                    <!-- th style="position: sticky; top: -1; text-align: center;" class=table_title align=middle>连接方式</th -->
+                    <th style="position: sticky; top: -1; text-align: center;" class=table_title align=middle>端口</th>
+                    <th style="position: sticky; top: -1; text-align: center;" class=table_title align=middle>AP客户端数量</th>
+                    <th style="position: sticky; top: -1; text-align: center;" class=table_title align=middle>备注</th>
+                    <th style="position: sticky; top: -1; text-align: center;" class=table_title align=middle>详细信息</th>
+                </tr>
+            </thead>
+            <tbody>
+                <SCRIPT language=JavaScript type=text/javascript>
+                    if ( ret.respCode == "3" || ret == null)
+                    {
+                        var hang_num = 10 ; //当前每页的行数
+                        var pages_now = 1 ; //当前所在的页码
+                        var num = 0; //当前总共有多少页
+                        var length_total = 0;
+                    }
+                    else
+                    {
+                        var hang_num = parseInt(ret.pageLines) ; //当前每页的行数
+                        var pages_now =parseInt(ret.pageIdx) ; //当前所在的页码
+                        var num = Math.ceil(ret.total/hang_num); //当前总共有多少页
+                        var length_total = ret.data.list.length;
+                    }
+                    var j = (pages_now-1)*hang_num;
+                    var k =0 ;
+                    var lan_num = '6';
+                    var lan_pon_num = '2';
+                    var isFttrMainDevice = 'Yes';
+                    if (isFttrMainDevice == "Yes") {
+                        if (lan_pon_num == "N/A") {
+                            //当这个值不存在时,缺省为1
+                            lan_pon_num = "1";
+                        }
+                    } else {
+                        lan_pon_num = "0";
+                    }
+                    var eth_lan_num = parseInt(lan_num) - parseInt(lan_pon_num);
+                    for(i=0 ; i < length_total; i++)
+                    {
+                            j=j+1;
+                            k=i+1;
+                            var real_lan_index = 0;
+                            var uplink_port = parseInt(ret.data.list[i].UplinkPort);
+                            if ( uplink_port >= 0 && uplink_port <= eth_lan_num) {
+                                real_lan_index = uplink_port;
+                            } else if ( uplink_port > eth_lan_num && uplink_port <= parseInt(lan_num) ) {
+                                real_lan_index = uplink_port - eth_lan_num;
+                            }
+                            document.write('<TR  id="row'+k+'" val= 0 onclick="clicks(this)" ondblclick="Click_s(this)">');
+                            document.write('<TD width=50 align=middle word-wrap: break-word;>' + j + '&nbsp;</TD>');
+                            document.write('<TD witth=100 align=middle word-wrap: break-word;>' + ret.data.list[i].Model + '&nbsp;</TD>');
+                            document.write('<TD witth=100 align=middle word-wrap: break-word;>' + ret.data.list[i].IP + '&nbsp;</TD>');
+                            document.write('<TD witth=100 align=middle word-wrap: break-word;>' + ret.data.list[i].Version + '&nbsp;</TD>');
+                            document.write('<TD witth=100 align=middle word-wrap: break-word;>' + ret.data.list[i].Mac.replace(/(.{2})(?=.)/g,"$1:")+ '&nbsp;</TD>');
+                            if ( ret.data.list[i].Status == "1" )
+                                document.write('<TD witth=100 align=middle word-wrap: break-word;>'+'在线'+'&nbsp;</TD>');
+                            else
+                                document.write('<TD witth=100 align=middle word-wrap: break-word;>'+'离线'+'&nbsp;</TD>');
+                            document.write('<TD witth=100 align=middle word-wrap: break-word;>' + ret.data.list[i].Profile + '&nbsp;</TD>');
+                            document.write('<TD witth=100 align=middle word-wrap: break-word;>' + ret.data.list[i].ChannelG24 + '&nbsp;</TD>');
+                            document.write('<TD witth=100 align=middle word-wrap: break-word;>' + ret.data.list[i].ChannelG5 + '&nbsp;</TD>');
+                            if (ret.data.list[i].Uplink == '0') {
+                                //document.write('<TD witth=100 align=middle word-wrap: break-word;>' + '有线连接' + '&nbsp;</TD>');
+                                document.write('<TD witth=100 align=middle word-wrap: break-word;>' + "LAN" + real_lan_index + '&nbsp;</TD>');
+                            } else if (ret.data.list[i].Uplink == '2') {
+                                //document.write('<TD witth=100 align=middle word-wrap: break-word;>' + '光纤' + '&nbsp;</TD>');
+                                document.write('<TD witth=100 align=middle word-wrap: break-word;>' + "LANPON" + real_lan_index + '&nbsp;</TD>');
+                            } else if(ret.data.list[i].Uplink == '1') {
+                                //无线接入暂时不考虑,显示为-
+                                //document.write('<TD witth=100 align=middle word-wrap: break-word;>' + '-' + '&nbsp;</TD>');
+                                document.write('<TD witth=100 align=middle word-wrap: break-word;>' + '-' + '&nbsp;</TD>');
+                            } else {
+                                //值为空或者其他值都显示unknow
+                                document.write('<TD witth=100 align=middle word-wrap: break-word;>' + '未知' + '&nbsp;</TD>');
+                            }
+                            document.write('<TD witth=100 align=middle word-wrap: break-word;>' + ret.data.list[i].Assoc + '&nbsp;</TD>');
+                            //document.write('<TD witth=100 align=middle word-wrap: break-word;>' + ret.data.list[i].Alias + '&nbsp;</TD>');
+                            if(ret.data.list[i].Alias.length == 0)
+                            {
+                                document.write('<TD width=100 align=middle word-wrap: break-word;>&nbsp;<a value="'+i+'" href="javascript:void(0)" onclick="update_alias_Window(this,0)">备注</a>&nbsp;</TD>');
+                            }
+                            else
+                            {
+                                document.write('<TD width=100 align=middle word-wrap: break-word;>&nbsp;<a value="'+i+'" href="javascript:void(0)" onclick="update_alias_Window(this,1)">' + ret.data.list[i].Alias + '</a>&nbsp;</TD>');
+                            }
+                            document.write('<TD witth=100 align=middle word-wrap: break-word;>');
+                            document.write('<a width=50 value="'+i+'" href="javascript:void(0)" onclick="displayWindow(this)">'+'详情'+'&nbsp;</a>');
+                            
+                            document.write('</TD>');
+                            document.write('</TR>');
+                    }
+
+
+                </script>
+            </tbody>
+        </table>
+    </div><br>
+        <TABLE cellspacing=0 cellPadding=0 border=0 width=100% align="center">
+            <TBODY>
+                <tr>
+                    <SCRIPT language=JavaScript type=text/javascript>
+                        if ( ret.respCode == "3" || ret == null )
+                        {
+                            var page_now = 1 ;            //当前页面页码
+                            var hang_num = 10            //当前每页行数
+                            var page_total = 0 ;                  //总共页码
+                            var info_total = 0 ;            //总共记录
+                        }
+                        else
+                        {
+                            var page_now = ret.pageIdx ;            //当前页面页码
+                            var hang_num = ret.pageLines            //当前每页行数
+                            var page_total = num ;                  //总共页码
+                            var info_total = ret.total ;            //总共记录
+                        }
+                        document.write('<TD noWrap="noWrap" align="right">');
+                        document.write('<span>'+'第 '+page_now+' 页'+'</span>');
+                        document.write('<span>/'+'共 '+page_total+' 页, '+'</span>');
+                        document.write('<span>'+'共 '+info_total+' 条记录. '+'</span>');
+                        document.write('<span>'+'每页');
+                        document.write('<input id="txtMaxRows" name="txtMaxRows" style="TEXT-ALIGN:center;width: 62;height: 20;" value = '+hang_num+' >');
+                            document.write('行'+'</span>');
+                        document.write('</TD>');
+                    </SCRIPT>
+                    <td align="right" style="width:15px" valign="middle"><IMG name="imgFirst" id="imgFirst" title="首页"
+                            src="/img/first.gif" onclick=firstpage()></td>
+                    <td width=1>&nbsp;</td>
+                    <td align="right" style="width:15px" valign="middle"><IMG name="imgPrev" id="imgPrev" title="上一页"
+                            src="/img/prev.gif" onclick=pageup1()></td>
+                    <td width=1>&nbsp;</td>
+                    <td align="right" style="width:15px" valign="middle">
+                        <SCRIPT language=JavaScript type=text/javascript>
+                            document.write('<input name="txtCurPageIndex" type="text"  id="txtCurPageIndex" maxlength="4" size="4" style="TEXT-ALIGN:center;width: 62;height: 20;" value = '+page_now+' >');
+                        </SCRIPT>
+                        
+                    </td>
+                    <td align="right" style="width:15px" valign="middle">
+                        <input type="button" name="btnGoPage" value="Go" id="btnGoPage" onclick="gopage()" class="BtnAdd btn btn-dark btn-pill">
+                    </td>
+                    <script>
+                        window.addEventListener('message', (e) => {
+                            alert(e.data);
+                            }, false);
+
+                    </script>
+                    <td width=1>&nbsp;</td>
+                    <td align="right" style="width:15px" valign="middle"> <IMG name="imgNext" id="imgNext" title="下一页"
+                            src="/img/next.gif" onclick=pagedown1()></td>
+                    <td width=1>&nbsp;</td>
+                    <td align="right" style="width:15px" valign="middle"><IMG name="imgLast" id="imgLast" title="尾页"
+                            src="/img/last.gif" onclick=lastpage()></td>
+                </tr>
+            </TBODY>
+        </TABLE>
+
+
+        <TABLE cellspacing=0 cellPadding=0 border=0 width=100% align="center">
+            <TBODY>
+                <TR class='textCell'>
+                    <td width=30 valign=top>&nbsp;
+                    <td width=1050 colSpan=3></TD>
+                </TR>
+                <TR>
+                    <TD align=left valign=top>
+                        <INPUT type=button name=op_selctall id=op_selctall class="BtnAdd btn btn-dark btn-pill" value="全选" onClick=selectall()>
+                    </TD>
+
+                    <TD align=right>
+                        <INPUT type=hidden name=get_value id=get_value value=0>
+                        <INPUT type=hidden name=save_value id=save_value value=0>
+                        <input type=hidden id=click_num name=click_num value=0>
+                        <INPUT type=button name=bind_config id=bind_config style=width:100px class="BtnAdd btn btn-dark btn-pill" value="绑定模板"
+                            onClick=open_bind_config_comment()>
+                        <INPUT name=version_upgrade id=version_upgrade type=button style=width:80px class="BtnAdd btn btn-dark btn-pill"
+                            value="版本升级" onClick=op_update()>
+                    <!--    <INPUT name=config_cogradient id=config_cogradient type=button style=width:80px class=button
+                            value=配置同步 onClick=op_config()>-->
+                        <INPUT name=config_delete id=config_delete type=button style=width:120px class="BtnDel btn btn-danger btn-pill"
+                            value="删除离线记录" onClick=op_delete()>
+                        <INPUT name=config_multi_reboot id=config_multi_reboot type=button style=width:80px
+                            class="BtnAdd btn btn-dark btn-pill" value="重启" onClick=op_reboot()>
+                        <INPUT name=config_multi_restore id=config_multi_restore type=button style=width:120px class="BtnAdd btn btn-dark btn-pill"
+                            value="恢复出厂" onClick=op_restore()>
+                      <!--  <INPUT name=sysinfo_export id=sysinfo_export type=button style=width:100px class=button
+                            value=定位信息导出 onClick=op_export()> -->
+                        <SCRIPT language=JavaScript type=text/javascript>
+                                    document.getElementById("bind_config").setAttribute("disabled", false);
+                                    document.getElementById("bind_config").style.backgroundColor = "gray";
+
+                                    document.getElementById("version_upgrade").setAttribute("disabled", false);
+                                    document.getElementById("version_upgrade").style.backgroundColor = "gray";
+
+                                    //document.getElementById("config_cogradient").setAttribute("disabled", false);
+                                    //document.getElementById("config_cogradient").style.backgroundColor = "gray";
+
+                                    document.getElementById("config_delete").setAttribute("disabled", false);
+                                    document.getElementById("config_delete").style.backgroundColor = "gray";
+
+                                    document.getElementById("config_multi_reboot").setAttribute("disabled", false);
+                                    document.getElementById("config_multi_reboot").style.backgroundColor = "gray";
+
+                                    document.getElementById("config_multi_restore").setAttribute("disabled", false);
+                                    document.getElementById("config_multi_restore").style.backgroundColor = "gray";
+
+                                    //document.getElementById("sysinfo_export").setAttribute("disabled", false);
+                                    //document.getElementById("sysinfo_export").style.backgroundColor = "gray";
+                                </SCRIPT>
+
+                        <INPUT colspan=3 type=button id=manual_refresh value="刷新" class="BtnAdd btn btn-dark btn-pill" onclick=myrefresh()>
+                    </TD>
+                </TR>
+            </TBODY>
+        </TABLE>
+        <input type="hidden" name="rebootToChangeMode" value="Yes">
+    </FORM>
+
+    <div id="upgrade_s" class="window_css">
+        <div style="text-align:right; line-height:10px;">
+            <a href="javascript:void(0)" onclick="hideWindow_s()">关闭</a>
+            <div id=upgrade_data name=upgrade_data style="text-align:left;">
+
+    <TABLE >
+    <tr>
+    <td width=100></td>
+    <td width=100>升级固件Url地址:</td>
+    <td><input maxlength="128" name="FirmwareUrl" id="FirmwareUrl" value="" ></td>
+        <td width=5>&nbsp;</td>
+    </tr>
+
+    <tr><td>&nbsp;</td></tr>
+
+    <tr>
+    <td width=100></td>
+    <td width=100>FTP账户名称:</td>
+    <td><input maxlength="128" name="FtpUser" id="FtpUser" value="" ></td>
+        <td width=5>&nbsp;</td>
+    </tr>
+
+    <tr><td>&nbsp;</td></tr>
+
+    <tr>
+    <td width=100></td>
+    <td width=100>FTP账户密码:</td>
+    <td><input maxlength="128" name="FtpPwd" id="FtpPwd" value="" ></td>
+        <td width=50>&nbsp;</td>
+    </tr>
+    <tr><td>&nbsp;</td></tr>
+    </TABLE >
+<TABLE >
+    <tr>
+    <td width=125></td>
+    <td><input name="op_submit" id="op_submit" type="button" class="BtnAdd btn btn-dark btn-pill" value="确定" onclick="submitF()" ></td>
+    <td width=5>&nbsp;</td>
+    <td><input name="op_confirm" id="op_confirm" type="button" class="btn btn-light btn-pill" value="取消" onclick="hideWindow_s()" ></td>
+    <td width=50>&nbsp;</td>
+    </tr>
+
+<script>
+                    function displayWindow_s() {
+                        /*悬浮窗口的显示,需要将display变成block*/
+                        document.getElementById("upgrade_s").style.display = "block";
+                        document.getElementById("upgrade_data").style.display = "block";
+                    }
+                    function hideWindow_s() {
+                        document.getElementById("upgrade_s").style.display = "none";
+                        document.getElementById("upgrade_data").style.display = "none";
+                    }
+</script>
+    </TABLE>
+    </div>
+    </div>
+    </div>
+
+<script>
+Set_refresh();
+</SCRIPT>
+    <!--出现悬浮窗口后,背景变暗-->
+    <div id="shadow" class="shadow_css"></div>
+</body>
+
+</html>

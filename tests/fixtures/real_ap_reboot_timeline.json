@@ -1,0 +1,252 @@
+{
+  "_comment": "REAL SAMPLE (sanitized), phase 0 AP reboot via AC XAdd_Task on 2026-09-29.   - Vendor OUI E0:21:FE kept; the device-specific (NIC) part of each MAC is replaced:       AP-A (FS8820A)      -> E0:21:FE:A0:A0:0x  (base MAC ..:00, BSSIDs ..:04/..:05)       AP-B (RL820GW-AX3)  -> E0:21:FE:B0:B0:0x       AC (LAN ..:00, WAN ..:02) -> E0:21:FE:C0:C0:0x     The same NIC substitution is applied everywhere the MAC is embedded: PON SN (RLGMFEA0A000 /     RLGMFEB0B000, sn_address RLGM-FEA0A000), DevName/HostName (FTTRSub_A0A000 / FTTRSub_B0B000),     EUI-64 IPv6 (...:fea0:a000). Upper/lower case and colon/no-colon style of the original are kept.   - Other (client) MACs -> 02:00:00:00:00:NN, numbered in first-seen order across all real_* files.   - DevSN: AP-A -> RLGM00000000001, AP-B -> RL00000000002; AC serial -> RL0000000000003 (lengths kept).   - IPv4: AC LAN /24 -> 192.0.2.X, AC WAN /24 -> 198.51.100.X, AP-A mgmt /24 -> 203.0.113.X     (last octet kept, so AP-B = 192.0.2.10, AP-A = 192.0.2.4, AC LAN = 192.0.2.1). Masks kept.   - Client IPv6 link-local (other than fe80::1) -> fe80::2:0:0:NN.   - UUIDs (AP Fingerprint, task SeqId) -> 00000000-0000-4000-8000-0000000000NN.   - Client host names -> client-host-NN; SSID -> TEST_SSID / TEST_SSID_5G.   - No ecntToken, cookie or password appears in these pages (checked); nothing else was removed.",
+  "submitted_local_time": "2026-09-29 19:06:41 +08:00",
+  "form": [
+    [
+      "pageidx_rows",
+      "1,10000"
+    ],
+    [
+      "filtervalue",
+      ""
+    ],
+    [
+      "filterkey_value",
+      ""
+    ],
+    [
+      "upgrade_mac",
+      "E021FEB0B000"
+    ],
+    [
+      "upgrade_action",
+      "2"
+    ],
+    [
+      "delete",
+      "0"
+    ],
+    [
+      "search_item",
+      "0"
+    ],
+    [
+      "search_condition",
+      ""
+    ],
+    [
+      "auto_refresh",
+      "0"
+    ],
+    [
+      "txtMaxRows",
+      "10000"
+    ],
+    [
+      "txtCurPageIndex",
+      "1"
+    ],
+    [
+      "get_value",
+      "0"
+    ],
+    [
+      "save_value",
+      "0"
+    ],
+    [
+      "click_num",
+      "0"
+    ],
+    [
+      "rebootToChangeMode",
+      "Yes"
+    ]
+  ],
+  "timeline": [
+    {
+      "event": "submitted",
+      "status": 200,
+      "row": {
+        "Model": "RL820GW-AX3",
+        "IP": "192.0.2.10",
+        "Version": "V0.0.51",
+        "Mac": "E021FEB0B000",
+        "Status": "1",
+        "Profile": "Default",
+        "ChannelG24": "9",
+        "ChannelG5": "52",
+        "Assoc": "4",
+        "Alias": "820",
+        "BssidG24": "E021FEB0B004",
+        "BssidG5": "E021FEB0B005",
+        "Uplink": "2",
+        "UplinkPort": "6",
+        "SN": "RLGMFEB0B000",
+        "DevSN": "RL00000000002",
+        "UpgradeFlag": "1",
+        "ProfileIdx": "1",
+        "OptTxPower": "-2.50",
+        "OptRxPower": "-14.40"
+      },
+      "task": {
+        "Mac": "E021FEB0B000",
+        "SeqId": "00000000-0000-4000-8000-000000000001",
+        "Index": "1",
+        "Action": "2",
+        "UpgradeStatus": "0",
+        "UpgradeError": "0",
+        "FirmwareUrl": "",
+        "FtpUser": "",
+        "FtpPwd": "",
+        "RebootStatus": "0",
+        "RestoreStatus": "0"
+      },
+      "task_raw": {
+        "respCode": 0,
+        "pageIdx": 1,
+        "pageLines": 64,
+        "filterKey": "",
+        "filterValue": "",
+        "total": 1,
+        "count": 1,
+        "data": {
+          "list": [
+            {
+              "Mac": "E021FEB0B000",
+              "SeqId": "00000000-0000-4000-8000-000000000001",
+              "Index": "1",
+              "Action": "2",
+              "UpgradeStatus": "0",
+              "UpgradeError": "0",
+              "FirmwareUrl": "",
+              "FtpUser": "",
+              "FtpPwd": "",
+              "RebootStatus": "0",
+              "RestoreStatus": "0"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "i": 1,
+      "elapsed": 31,
+      "Status": "0",
+      "row": {
+        "Model": "RL820GW-AX3",
+        "IP": "192.0.2.10",
+        "Version": "V0.0.51",
+        "Mac": "E021FEB0B000",
+        "Status": "0",
+        "Profile": "Default",
+        "ChannelG24": "9",
+        "ChannelG5": "52",
+        "Assoc": "0",
+        "Alias": "820",
+        "BssidG24": "E021FEB0B004",
+        "BssidG5": "E021FEB0B005",
+        "Uplink": "2",
+        "UplinkPort": "6",
+        "SN": "RLGMFEB0B000",
+        "DevSN": "RL00000000002",
+        "UpgradeFlag": "1",
+        "ProfileIdx": "1",
+        "OptTxPower": "-2.50",
+        "OptRxPower": "-14.40"
+      },
+      "task": {
+        "Mac": "E021FEB0B000",
+        "SeqId": "00000000-0000-4000-8000-000000000001",
+        "Index": "1",
+        "Action": "2",
+        "UpgradeStatus": "0",
+        "UpgradeError": "0",
+        "FirmwareUrl": "",
+        "FtpUser": "",
+        "FtpPwd": "",
+        "RebootStatus": "3",
+        "RestoreStatus": "0"
+      },
+      "task_resp": 0,
+      "SysDuration": null
+    },
+    {
+      "i": 2,
+      "elapsed": 62,
+      "Status": "1",
+      "row": {
+        "Model": "RL820GW-AX3",
+        "IP": "192.0.2.10",
+        "Version": "V0.0.51",
+        "Mac": "E021FEB0B000",
+        "Status": "1",
+        "Profile": "Default",
+        "ChannelG24": "0",
+        "ChannelG5": "0",
+        "Assoc": "0",
+        "Alias": "820",
+        "BssidG24": "",
+        "BssidG5": "",
+        "Uplink": "2",
+        "UplinkPort": "6",
+        "SN": "RLGMFEB0B000",
+        "DevSN": "RL00000000002",
+        "UpgradeFlag": "1",
+        "ProfileIdx": "1",
+        "OptTxPower": "-2.90",
+        "OptRxPower": "-14.40"
+      },
+      "task": {
+        "Mac": "E021FEB0B000",
+        "SeqId": "00000000-0000-4000-8000-000000000001",
+        "Index": "1",
+        "Action": "2",
+        "UpgradeStatus": "0",
+        "UpgradeError": "0",
+        "FirmwareUrl": "",
+        "FtpUser": "",
+        "FtpPwd": "",
+        "RebootStatus": "1",
+        "RestoreStatus": "0"
+      },
+      "task_resp": 0,
+      "SysDuration": "34"
+    }
+  ],
+  "detail_list_ap_after_reboot": {
+    "respCode": 0,
+    "data": {
+      "Model": "RL820GW-AX3",
+      "IP": "192.0.2.10",
+      "Version": "V0.0.51",
+      "Mac": "E021FEB0B000",
+      "Status": "1",
+      "Profile": "Default",
+      "ChannelG24": "0",
+      "ChannelG5": "0",
+      "Assoc": "0",
+      "Alias": "820",
+      "SN": "RLGMFEB0B000",
+      "Uplink": "2",
+      "UplinkPort": "6",
+      "Fingerprint": "00000000-0000-4000-8000-000000000002",
+      "LastOfflineReason": "",
+      "BssidG24": "",
+      "BssidG5": "",
+      "SysDuration": "34",
+      "RamSize": "536870912",
+      "FlashSize": "268435456",
+      "DevName": "FTTRSub_B0B000",
+      "CPUUsage": "0",
+      "CPUTemp": "63",
+      "MEMUsage": "17",
+      "FlashUsage": "86",
+      "DevSN": "RL00000000002",
+      "UpgradeFlag": "1",
+      "ProfileIdx": "1",
+      "OptTxPower": "-2.90",
+      "OptRxPower": "-14.40"
+    }
+  }
+}

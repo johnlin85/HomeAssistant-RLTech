@@ -1,0 +1,8 @@
+RLTech FTTR Home Assistant integration
+Copyright 2026 RLTech
+
+This product is licensed under the Apache License, Version 2.0 (see LICENSE).
+
+It is based on ha-rltech-fttr by hmsta (https://github.com/hmsta/ha-rltech-fttr),
+Copyright (c) 2026 hmsta, used under the MIT License. The original MIT license
+text is kept in LICENSE-MIT and applies to the portions derived from that work.

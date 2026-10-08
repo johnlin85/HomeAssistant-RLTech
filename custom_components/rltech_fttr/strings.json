@@ -1,0 +1,290 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "RLTech FTTR",
+        "description": "Enter the AC address (WAN or LAN both work) and its Web UI login. The AP list, clients and AP details all come from port 8080. Port 80 and MQTT (8883) are used automatically as extras when Home Assistant can reach the AC's LAN address; without them everything still works.",
+        "data": {
+          "base_url": "AC address",
+          "username": "Username",
+          "password": "Password"
+        },
+        "data_description": {
+          "base_url": "WAN or LAN address of the AC, for example 198.51.100.29. Only the host; port 8080 is used automatically.",
+          "username": "AC Web UI account (useradmin or administrator; both share one login slot)."
+        }
+      },
+      "mqtt": {
+        "title": "MQTT live data (optional)",
+        "description": "Port 8883 answered ({reachable}). MQTT gives faster AP and client updates. Leave the MQTT address empty to use the detected LAN address {lan_ip} automatically. You can untick MQTT to continue and configure it later in the options.",
+        "data": {
+          "enable_mqtt": "Use MQTT live data",
+          "mqtt_host": "MQTT address (empty = automatic)",
+          "mqtt_psk": "MQTT PSK (hex or text)",
+          "mqtt_use_factory_defaults": "Use the factory default MQTT credentials"
+        },
+        "data_description": {
+          "mqtt_psk": "The TLS-PSK key configured on the AC.",
+          "mqtt_use_factory_defaults": "Only tick this if the AC still has its factory MQTT credentials."
+        }
+      },
+      "reauth_confirm": {
+        "title": "Log in to the AC again",
+        "description": "The AC at {host} rejected the stored login. Enter the current Web UI username and password.",
+        "data": {
+          "username": "Username",
+          "password": "Password"
+        }
+      },
+      "reconfigure": {
+        "title": "Reconfigure RLTech FTTR",
+        "description": "Change the AC address (for example from WAN to LAN) or its login. Leave the password empty to keep the stored one. Entity IDs and device names do not change.",
+        "data": {
+          "base_url": "AC address",
+          "username": "Username",
+          "password": "Password"
+        },
+        "data_description": {
+          "base_url": "WAN or LAN address of the AC, for example 198.51.100.29. Only the host; port 8080 is used automatically.",
+          "username": "AC Web UI account (useradmin or administrator; both share one login slot)."
+        }
+      }
+    },
+    "error": {
+      "invalid_host": "Enter only a host name or IP address (optionally with :8080).",
+      "host_in_use": "Another RLTech entry already uses this address.",
+      "invalid_auth": "The AC rejected the username or password.",
+      "account_locked": "The AC Web UI login is locked (usually after wrong passwords were typed in a browser). Wait until the AC unlocks it and try again.",
+      "account_busy": "The AC Web UI is in use by another session. The administrator and useradmin accounts share one login slot. Close every open AC Web UI tab (or log out there), wait 10 seconds and try again.",
+      "cannot_connect": "Cannot connect to port 8080 of this address. Check the address and that Home Assistant can reach the AC on port 8080 (WAN or LAN address).",
+      "not_rltech": "Port 8080 answered, but it does not look like an RLTech AC Web UI.",
+      "cannot_identify": "Logged in, but the AC LAN MAC or serial number could not be read, so it cannot be confirmed that this is the same AC. Try again later.",
+      "mqtt_credentials_required": "Enter the MQTT PSK or tick the factory defaults. You can also untick MQTT and continue.",
+      "mqtt_unreachable": "The MQTT broker could not be reached. You can untick MQTT and continue, and configure it later in the options.",
+      "mqtt_tls_failed": "The TLS-PSK handshake failed (wrong PSK?). You can untick MQTT and continue, and configure it later in the options.",
+      "mqtt_auth_failed": "The MQTT broker rejected the credentials. You can untick MQTT and continue, and configure it later in the options.",
+      "mqtt_unknown": "MQTT could not be verified. You can untick MQTT and continue, and configure it later in the options.",
+      "unknown": "Unexpected error. See the Home Assistant log."
+    },
+    "abort": {
+      "already_configured": "This AC is already configured.",
+      "reauth_successful": "Login updated.",
+      "reconfigure_successful": "Configuration updated.",
+      "wrong_device": "The AC at this address is not the one originally configured (different LAN MAC or serial number). If the AC was really replaced, delete this integration and add it again."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "RLTech FTTR options",
+        "description": "The integration reloads after saving (if someone is using the AC Web UI at that moment it retries until the login is free). Detected AC LAN address: {detected_lan_ip}. MQTT address in use: {effective_mqtt_host}.",
+        "data": {
+          "scan_interval": "Polling interval",
+          "web_busy_grace_polls": "Busy Web UI grace (polls)",
+          "stale_device_days": "Remove missing APs after (days)",
+          "ac_utc_offset": "AC time zone",
+          "ap_area_id": "Area for new AP devices"
+        },
+        "data_description": {
+          "scan_interval": "Minimum 30 seconds. Each poll logs in to the AC Web UI once.",
+          "web_busy_grace_polls": "How many polls to keep the last data while another session holds the AC Web UI login. 0 = unavailable at once.",
+          "stale_device_days": "AP devices the AC has not reported for this many days are removed. 0 = never remove automatically.",
+          "ac_utc_offset": "Times shown on AC pages (for example PON up/down times) are parsed with this offset. The AC has no readable time zone setting; set it manually if it differs from Home Assistant."
+        },
+        "sections": {
+          "clients": {
+            "name": "Clients (advanced)",
+            "description": "Client list polling and ageing.",
+            "data": {
+              "station_retention": "Keep clients for",
+              "station_stale_after": "Mark clients inactive after",
+              "enable_ap_polling": "Poll the AP list",
+              "enable_station_polling": "Poll the client list"
+            }
+          },
+          "port80": {
+            "name": "Port 80 enhancement (advanced)",
+            "description": "Extra OLT status from port 80. Automatic: used when reachable, silently skipped when not (for example on the WAN address).",
+            "data": {
+              "enable_hardware_status": "Port 80 enhancement (automatic)",
+              "legacy_username": "Port 80 username",
+              "legacy_password": "Port 80 password (empty = keep)",
+              "legacy_hosts": "Additional port 80 OLT hosts"
+            }
+          },
+          "mqtt": {
+            "name": "MQTT enhancement (advanced)",
+            "description": "Live AP/client updates over MQTT (8883, AC LAN only). Leave the address empty for automatic (the detected LAN address).",
+            "data": {
+              "enable_mqtt": "MQTT live data (automatic)",
+              "mqtt_host": "MQTT address (empty = automatic)",
+              "mqtt_username": "MQTT username",
+              "mqtt_password": "MQTT password (empty = keep)",
+              "mqtt_psk_identity": "MQTT PSK identity",
+              "mqtt_psk": "MQTT PSK (empty = keep)",
+              "mqtt_use_factory_defaults": "Use the factory default MQTT credentials"
+            }
+          }
+        }
+      }
+    },
+    "error": {
+      "invalid_host": "Enter only a host name or IP address for MQTT (optionally with :8883), or leave it empty for automatic.",
+      "mqtt_credentials_required": "Enter the MQTT PSK or tick the factory defaults. You can also untick MQTT and continue.",
+      "mqtt_unreachable": "The MQTT broker at this address could not be reached. Clear the MQTT address to go back to automatic mode and save.",
+      "mqtt_tls_failed": "The TLS-PSK handshake failed (wrong PSK?). You can untick MQTT and continue, and configure it later in the options.",
+      "mqtt_auth_failed": "The MQTT broker rejected the credentials. You can untick MQTT and continue, and configure it later in the options.",
+      "mqtt_unknown": "MQTT could not be verified. You can untick MQTT and continue, and configure it later in the options.",
+      "invalid_option": "One of the values is not valid."
+    }
+  },
+  "selector": {
+    "ac_utc_offset": {
+      "options": {
+        "ha": "Follow Home Assistant",
+        "-12:00": "UTC-12:00",
+        "-11:30": "UTC-11:30",
+        "-11:00": "UTC-11:00",
+        "-10:30": "UTC-10:30",
+        "-10:00": "UTC-10:00",
+        "-09:30": "UTC-09:30",
+        "-09:00": "UTC-09:00",
+        "-08:30": "UTC-08:30",
+        "-08:00": "UTC-08:00",
+        "-07:30": "UTC-07:30",
+        "-07:00": "UTC-07:00",
+        "-06:30": "UTC-06:30",
+        "-06:00": "UTC-06:00",
+        "-05:30": "UTC-05:30",
+        "-05:00": "UTC-05:00",
+        "-04:30": "UTC-04:30",
+        "-04:00": "UTC-04:00",
+        "-03:30": "UTC-03:30",
+        "-03:00": "UTC-03:00",
+        "-02:30": "UTC-02:30",
+        "-02:00": "UTC-02:00",
+        "-01:30": "UTC-01:30",
+        "-01:00": "UTC-01:00",
+        "-00:30": "UTC-00:30",
+        "+00:00": "UTC+00:00",
+        "+00:30": "UTC+00:30",
+        "+01:00": "UTC+01:00",
+        "+01:30": "UTC+01:30",
+        "+02:00": "UTC+02:00",
+        "+02:30": "UTC+02:30",
+        "+03:00": "UTC+03:00",
+        "+03:30": "UTC+03:30",
+        "+04:00": "UTC+04:00",
+        "+04:30": "UTC+04:30",
+        "+05:00": "UTC+05:00",
+        "+05:30": "UTC+05:30",
+        "+05:45": "UTC+05:45",
+        "+06:00": "UTC+06:00",
+        "+06:30": "UTC+06:30",
+        "+07:00": "UTC+07:00",
+        "+07:30": "UTC+07:30",
+        "+08:00": "UTC+08:00",
+        "+08:30": "UTC+08:30",
+        "+08:45": "UTC+08:45",
+        "+09:00": "UTC+09:00",
+        "+09:30": "UTC+09:30",
+        "+10:00": "UTC+10:00",
+        "+10:30": "UTC+10:30",
+        "+11:00": "UTC+11:00",
+        "+11:30": "UTC+11:30",
+        "+12:00": "UTC+12:00",
+        "+12:30": "UTC+12:30",
+        "+12:45": "UTC+12:45",
+        "+13:00": "UTC+13:00",
+        "+13:30": "UTC+13:30",
+        "+14:00": "UTC+14:00"
+      }
+    }
+  },
+  "entity": {
+    "button": {
+      "ap_reboot": { "name": "Reboot" },
+      "ac_reboot": { "name": "Reboot" }
+    },
+    "switch": {
+      "web_polling": { "name": "Web UI polling" }
+    },
+    "sensor": {
+      "ap_count": { "name": "AP count" },
+      "online_ap_count": { "name": "Online AP count" },
+      "reported_station_count": { "name": "Reported station count" },
+      "poll_duration": { "name": "Poll duration" },
+      "cpu_usage": { "name": "CPU usage" },
+      "cpu_temperature": { "name": "CPU temperature" },
+      "system_uptime": { "name": "System uptime" },
+      "memory_usage": { "name": "Memory usage" },
+      "flash_usage": { "name": "Flash usage" },
+      "last_boot": { "name": "Last boot" },
+      "pon_link_type": {
+        "name": "PON link type",
+        "state": {
+          "gpon": "GPON",
+          "epon": "EPON",
+          "xg_pon": "XG-PON",
+          "xgs_pon": "XGS-PON",
+          "10g_epon": "10G-EPON",
+          "ge": "GE",
+          "10ge": "10GE",
+          "ge_10ge": "GE/10GE"
+        }
+      },
+      "pon_online_status": {
+        "name": "PON online status",
+        "state": { "online": "Online", "connecting": "Connecting", "offline": "Offline" }
+      },
+      "pon_tx_power": { "name": "PON TX power" },
+      "pon_rx_power": { "name": "PON RX power" },
+      "pon_temperature": { "name": "PON temperature" },
+      "pon_voltage": { "name": "PON voltage" },
+      "pon_bias_current": { "name": "PON bias current" },
+      "lanpon_port_link": {
+        "name": "LANPON{port} link",
+        "state": { "connected": "Connected", "disconnected": "Disconnected" }
+      },
+      "lanpon_port_tx_power": { "name": "LANPON{port} TX power" },
+      "lanpon_port_rx_power": { "name": "LANPON{port} RX power" },
+      "lanpon_port_temperature": { "name": "LANPON{port} temperature" },
+      "lanpon_port_voltage": { "name": "LANPON{port} voltage" },
+      "lanpon_port_bias_current": { "name": "LANPON{port} bias current" },
+      "ap_online": { "name": "Online" },
+      "ap_assoc_count": { "name": "Associated clients" },
+      "ap_profile": { "name": "Profile" },
+      "ap_alias": { "name": "Alias" },
+      "ap_optical_rx_power": { "name": "Optical RX power" },
+      "ap_optical_tx_power": { "name": "Optical TX power" },
+      "ap_reg_off_time": { "name": "Reg/Off Time" },
+      "ap_last_off_reason": { "name": "Last off reason" },
+      "ap_source_host": { "name": "Source host" }
+    }
+  },
+  "issues": {
+    "web_ui_busy": {
+      "title": "RLTech AC Web UI is in use by another session",
+      "description": "Home Assistant cannot log in to the AC Web UI at {host} since {since} because another session holds the login. The AC allows only one Web UI session, and the administrator and user accounts share it.\n\nClose every open AC Web UI browser tab (or log out there). Home Assistant retries every poll and recovers on its own within one poll once the login is free. While you work in the AC Web UI you can also turn off the \"Web UI polling\" switch of this integration; it turns itself back on after 15 minutes."
+    },
+    "web_ui_unreachable": {
+      "title": "RLTech AC Web UI is unreachable",
+      "description": "Home Assistant has not been able to reach the AC Web UI at {host} (port 8080) since {since}. Check that the AC is powered on and reachable from Home Assistant on port 8080. If its address changed, use Reconfigure on the integration. If someone is working in the AC Web UI, close it when done, or turn off the \"Web UI polling\" switch of this integration while you use it; polling resumes on its own after 15 minutes."
+    }
+  },
+  "exceptions": {
+    "web_ui_busy": { "message": "The AC Web UI at {host} is in use by another session" },
+    "web_ui_unreachable": { "message": "The AC Web UI at {host} is unreachable" },
+    "web_ui_error": { "message": "The AC Web UI at {host} returned an unexpected response" },
+    "web_ui_locked": { "message": "The AC Web UI login at {host} is locked after failed logins; try again later" },
+    "web_ui_auth_failed": { "message": "The AC Web UI at {host} rejected the configured account" },
+    "ap_reboot_offline": { "message": "The AP is offline on the AC; it can only be rebooted while online" },
+    "ap_reboot_not_listed": { "message": "The AC no longer lists this AP" },
+    "ap_reboot_task_pending": { "message": "The AC is still running a task for this AP (reboot, upgrade or restore); try again when it has finished" },
+    "ap_reboot_slow": { "message": "The AC Web UI at {host} answered too slowly, so the reboot was not sent; try again later" },
+    "ap_reboot_unconfirmed": { "message": "The AC at {host} did not confirm the reboot request; check the AP before trying again" },
+    "ap_reboot_failed": { "message": "The AP reboot request to the AC at {host} failed" },
+    "ac_reboot_in_progress": { "message": "An AC reboot was just requested; wait until the AC is back online" },
+    "ac_reboot_failed": { "message": "The AC reboot request to {host} failed" }
+  }
+}

@@ -1,0 +1,347 @@
+{
+ "ac_reboot": {
+  "entity_id": "button.rltech_olt_198_51_100_29_reboot",
+  "friendly_name": "RLTech OLT 198.51.100.29 Reboot",
+  "name": "Reboot"
+ },
+ "ap_RLGMFEA0A000_alias": {
+  "entity_id": "sensor.rltech_ap_rlgmfea0a000_alias",
+  "friendly_name": "RLTech AP RLGMFEA0A000 Alias",
+  "name": "Alias"
+ },
+ "ap_RLGMFEA0A000_assoc_count": {
+  "entity_id": "sensor.rltech_ap_rlgmfea0a000_assoc_count",
+  "friendly_name": "RLTech AP RLGMFEA0A000 Associated clients",
+  "name": "Associated clients"
+ },
+ "ap_RLGMFEA0A000_cpu_temperature": {
+  "entity_id": "sensor.rltech_ap_rlgmfea0a000_cpu_temperature",
+  "friendly_name": "RLTech AP RLGMFEA0A000 CPU temperature",
+  "name": "CPU temperature"
+ },
+ "ap_RLGMFEA0A000_cpu_usage": {
+  "entity_id": "sensor.rltech_ap_rlgmfea0a000_cpu_usage",
+  "friendly_name": "RLTech AP RLGMFEA0A000 CPU usage",
+  "name": "CPU usage"
+ },
+ "ap_RLGMFEA0A000_flash_usage": {
+  "entity_id": "sensor.rltech_ap_rlgmfea0a000_flash_usage",
+  "friendly_name": "RLTech AP RLGMFEA0A000 Flash usage",
+  "name": "Flash usage"
+ },
+ "ap_RLGMFEA0A000_last_boot": {
+  "entity_id": "sensor.rltech_ap_rlgmfea0a000_last_boot",
+  "friendly_name": "RLTech AP RLGMFEA0A000 Last boot",
+  "name": "Last boot"
+ },
+ "ap_RLGMFEA0A000_last_down_cause": {
+  "entity_id": "sensor.rltech_ap_rlgmfea0a000_last_down_cause",
+  "friendly_name": "RLTech AP RLGMFEA0A000 Last off reason",
+  "name": "Last off reason"
+ },
+ "ap_RLGMFEA0A000_memory_usage": {
+  "entity_id": "sensor.rltech_ap_rlgmfea0a000_memory_usage",
+  "friendly_name": "RLTech AP RLGMFEA0A000 Memory usage",
+  "name": "Memory usage"
+ },
+ "ap_RLGMFEA0A000_online": {
+  "entity_id": "sensor.rltech_ap_rlgmfea0a000_online",
+  "friendly_name": "RLTech AP RLGMFEA0A000 Online",
+  "name": "Online"
+ },
+ "ap_RLGMFEA0A000_optical_rx_power": {
+  "entity_id": "sensor.rltech_ap_rlgmfea0a000_optical_rx_power",
+  "friendly_name": "RLTech AP RLGMFEA0A000 Optical RX power",
+  "name": "Optical RX power"
+ },
+ "ap_RLGMFEA0A000_optical_tx_power": {
+  "entity_id": "sensor.rltech_ap_rlgmfea0a000_optical_tx_power",
+  "friendly_name": "RLTech AP RLGMFEA0A000 Optical TX power",
+  "name": "Optical TX power"
+ },
+ "ap_RLGMFEA0A000_profile": {
+  "entity_id": "sensor.rltech_ap_rlgmfea0a000_profile",
+  "friendly_name": "RLTech AP RLGMFEA0A000 Profile",
+  "name": "Profile"
+ },
+ "ap_RLGMFEA0A000_reboot": {
+  "entity_id": "button.rltech_ap_rlgmfea0a000_reboot",
+  "friendly_name": "RLTech AP RLGMFEA0A000 Reboot",
+  "name": "Reboot"
+ },
+ "ap_RLGMFEA0A000_reg_off_time": {
+  "entity_id": "sensor.rltech_ap_rlgmfea0a000_reg_off_time",
+  "friendly_name": "RLTech AP RLGMFEA0A000 Reg/Off Time",
+  "name": "Reg/Off Time"
+ },
+ "ap_RLGMFEA0A000_source_host": {
+  "entity_id": "sensor.rltech_ap_rlgmfea0a000_source_host",
+  "friendly_name": "RLTech AP RLGMFEA0A000 Source host",
+  "name": "Source host"
+ },
+ "ap_RLGMFEB0B000_alias": {
+  "entity_id": "sensor.rltech_ap_rlgmfeb0b000_alias",
+  "friendly_name": "RLTech AP 820 Alias",
+  "name": "Alias"
+ },
+ "ap_RLGMFEB0B000_assoc_count": {
+  "entity_id": "sensor.rltech_ap_rlgmfeb0b000_assoc_count",
+  "friendly_name": "RLTech AP 820 Associated clients",
+  "name": "Associated clients"
+ },
+ "ap_RLGMFEB0B000_cpu_temperature": {
+  "entity_id": "sensor.rltech_ap_rlgmfeb0b000_cpu_temperature",
+  "friendly_name": "RLTech AP 820 CPU temperature",
+  "name": "CPU temperature"
+ },
+ "ap_RLGMFEB0B000_cpu_usage": {
+  "entity_id": "sensor.rltech_ap_rlgmfeb0b000_cpu_usage",
+  "friendly_name": "RLTech AP 820 CPU usage",
+  "name": "CPU usage"
+ },
+ "ap_RLGMFEB0B000_flash_usage": {
+  "entity_id": "sensor.rltech_ap_rlgmfeb0b000_flash_usage",
+  "friendly_name": "RLTech AP 820 Flash usage",
+  "name": "Flash usage"
+ },
+ "ap_RLGMFEB0B000_last_boot": {
+  "entity_id": "sensor.rltech_ap_rlgmfeb0b000_last_boot",
+  "friendly_name": "RLTech AP 820 Last boot",
+  "name": "Last boot"
+ },
+ "ap_RLGMFEB0B000_last_down_cause": {
+  "entity_id": "sensor.rltech_ap_rlgmfeb0b000_last_down_cause",
+  "friendly_name": "RLTech AP 820 Last off reason",
+  "name": "Last off reason"
+ },
+ "ap_RLGMFEB0B000_memory_usage": {
+  "entity_id": "sensor.rltech_ap_rlgmfeb0b000_memory_usage",
+  "friendly_name": "RLTech AP 820 Memory usage",
+  "name": "Memory usage"
+ },
+ "ap_RLGMFEB0B000_online": {
+  "entity_id": "sensor.rltech_ap_rlgmfeb0b000_online",
+  "friendly_name": "RLTech AP 820 Online",
+  "name": "Online"
+ },
+ "ap_RLGMFEB0B000_optical_rx_power": {
+  "entity_id": "sensor.rltech_ap_rlgmfeb0b000_optical_rx_power",
+  "friendly_name": "RLTech AP 820 Optical RX power",
+  "name": "Optical RX power"
+ },
+ "ap_RLGMFEB0B000_optical_tx_power": {
+  "entity_id": "sensor.rltech_ap_rlgmfeb0b000_optical_tx_power",
+  "friendly_name": "RLTech AP 820 Optical TX power",
+  "name": "Optical TX power"
+ },
+ "ap_RLGMFEB0B000_profile": {
+  "entity_id": "sensor.rltech_ap_rlgmfeb0b000_profile",
+  "friendly_name": "RLTech AP 820 Profile",
+  "name": "Profile"
+ },
+ "ap_RLGMFEB0B000_reboot": {
+  "entity_id": "button.rltech_ap_rlgmfeb0b000_reboot",
+  "friendly_name": "RLTech AP 820 Reboot",
+  "name": "Reboot"
+ },
+ "ap_RLGMFEB0B000_reg_off_time": {
+  "entity_id": "sensor.rltech_ap_rlgmfeb0b000_reg_off_time",
+  "friendly_name": "RLTech AP 820 Reg/Off Time",
+  "name": "Reg/Off Time"
+ },
+ "ap_RLGMFEB0B000_source_host": {
+  "entity_id": "sensor.rltech_ap_rlgmfeb0b000_source_host",
+  "friendly_name": "RLTech AP 820 Source host",
+  "name": "Source host"
+ },
+ "ap_count": {
+  "entity_id": "sensor.rltech_olt_198_51_100_29_ap_count",
+  "friendly_name": "RLTech OLT 198.51.100.29 AP count",
+  "name": "AP count"
+ },
+ "lanpon_port_1_current": {
+  "entity_id": "sensor.rltech_olt_198_51_100_29_lanpon1_bias_current",
+  "friendly_name": "RLTech OLT 198.51.100.29 LANPON1 bias current",
+  "name": "LANPON1 bias current"
+ },
+ "lanpon_port_1_link": {
+  "entity_id": "sensor.rltech_olt_198_51_100_29_lanpon1_link",
+  "friendly_name": "RLTech OLT 198.51.100.29 LANPON1 link",
+  "name": "LANPON1 link"
+ },
+ "lanpon_port_1_rx_power": {
+  "entity_id": "sensor.rltech_olt_198_51_100_29_lanpon1_rx_power",
+  "friendly_name": "RLTech OLT 198.51.100.29 LANPON1 RX power",
+  "name": "LANPON1 RX power"
+ },
+ "lanpon_port_1_temperature": {
+  "entity_id": "sensor.rltech_olt_198_51_100_29_lanpon1_temperature",
+  "friendly_name": "RLTech OLT 198.51.100.29 LANPON1 temperature",
+  "name": "LANPON1 temperature"
+ },
+ "lanpon_port_1_tx_power": {
+  "entity_id": "sensor.rltech_olt_198_51_100_29_lanpon1_tx_power",
+  "friendly_name": "RLTech OLT 198.51.100.29 LANPON1 TX power",
+  "name": "LANPON1 TX power"
+ },
+ "lanpon_port_1_voltage": {
+  "entity_id": "sensor.rltech_olt_198_51_100_29_lanpon1_voltage",
+  "friendly_name": "RLTech OLT 198.51.100.29 LANPON1 voltage",
+  "name": "LANPON1 voltage"
+ },
+ "lanpon_port_2_current": {
+  "entity_id": "sensor.rltech_olt_198_51_100_29_lanpon2_bias_current",
+  "friendly_name": "RLTech OLT 198.51.100.29 LANPON2 bias current",
+  "name": "LANPON2 bias current"
+ },
+ "lanpon_port_2_link": {
+  "entity_id": "sensor.rltech_olt_198_51_100_29_lanpon2_link",
+  "friendly_name": "RLTech OLT 198.51.100.29 LANPON2 link",
+  "name": "LANPON2 link"
+ },
+ "lanpon_port_2_rx_power": {
+  "entity_id": "sensor.rltech_olt_198_51_100_29_lanpon2_rx_power",
+  "friendly_name": "RLTech OLT 198.51.100.29 LANPON2 RX power",
+  "name": "LANPON2 RX power"
+ },
+ "lanpon_port_2_temperature": {
+  "entity_id": "sensor.rltech_olt_198_51_100_29_lanpon2_temperature",
+  "friendly_name": "RLTech OLT 198.51.100.29 LANPON2 temperature",
+  "name": "LANPON2 temperature"
+ },
+ "lanpon_port_2_tx_power": {
+  "entity_id": "sensor.rltech_olt_198_51_100_29_lanpon2_tx_power",
+  "friendly_name": "RLTech OLT 198.51.100.29 LANPON2 TX power",
+  "name": "LANPON2 TX power"
+ },
+ "lanpon_port_2_voltage": {
+  "entity_id": "sensor.rltech_olt_198_51_100_29_lanpon2_voltage",
+  "friendly_name": "RLTech OLT 198.51.100.29 LANPON2 voltage",
+  "name": "LANPON2 voltage"
+ },
+ "legacy_olt_198.18.11.2_cpu_usage": {
+  "entity_id": "sensor.rltech_olt_198_18_11_2_cpu_usage",
+  "friendly_name": "RLTech OLT 198.18.11.2 CPU usage",
+  "name": "CPU usage"
+ },
+ "legacy_olt_198.18.11.2_lanpon_port_1_current": {
+  "entity_id": "sensor.rltech_olt_198_18_11_2_lanpon1_bias_current",
+  "friendly_name": "RLTech OLT 198.18.11.2 LANPON1 bias current",
+  "name": "LANPON1 bias current"
+ },
+ "legacy_olt_198.18.11.2_lanpon_port_1_link": {
+  "entity_id": "sensor.rltech_olt_198_18_11_2_lanpon1_link",
+  "friendly_name": "RLTech OLT 198.18.11.2 LANPON1 link",
+  "name": "LANPON1 link"
+ },
+ "legacy_olt_198.18.11.2_lanpon_port_1_rx_power": {
+  "entity_id": "sensor.rltech_olt_198_18_11_2_lanpon1_rx_power",
+  "friendly_name": "RLTech OLT 198.18.11.2 LANPON1 RX power",
+  "name": "LANPON1 RX power"
+ },
+ "legacy_olt_198.18.11.2_lanpon_port_1_temperature": {
+  "entity_id": "sensor.rltech_olt_198_18_11_2_lanpon1_temperature",
+  "friendly_name": "RLTech OLT 198.18.11.2 LANPON1 temperature",
+  "name": "LANPON1 temperature"
+ },
+ "legacy_olt_198.18.11.2_lanpon_port_1_tx_power": {
+  "entity_id": "sensor.rltech_olt_198_18_11_2_lanpon1_tx_power",
+  "friendly_name": "RLTech OLT 198.18.11.2 LANPON1 TX power",
+  "name": "LANPON1 TX power"
+ },
+ "legacy_olt_198.18.11.2_lanpon_port_1_voltage": {
+  "entity_id": "sensor.rltech_olt_198_18_11_2_lanpon1_voltage",
+  "friendly_name": "RLTech OLT 198.18.11.2 LANPON1 voltage",
+  "name": "LANPON1 voltage"
+ },
+ "legacy_olt_198.18.11.2_last_boot": {
+  "entity_id": "sensor.rltech_olt_198_18_11_2_last_boot",
+  "friendly_name": "RLTech OLT 198.18.11.2 Last boot",
+  "name": "Last boot"
+ },
+ "legacy_olt_198.18.11.2_memory_usage": {
+  "entity_id": "sensor.rltech_olt_198_18_11_2_memory_usage",
+  "friendly_name": "RLTech OLT 198.18.11.2 Memory usage",
+  "name": "Memory usage"
+ },
+ "olt_cpu_temperature": {
+  "entity_id": "sensor.rltech_olt_198_51_100_29_cpu_temperature",
+  "friendly_name": "RLTech OLT 198.51.100.29 CPU temperature",
+  "name": "CPU temperature"
+ },
+ "olt_cpu_usage": {
+  "entity_id": "sensor.rltech_olt_198_51_100_29_cpu_usage",
+  "friendly_name": "RLTech OLT 198.51.100.29 CPU usage",
+  "name": "CPU usage"
+ },
+ "olt_last_boot": {
+  "entity_id": "sensor.rltech_olt_198_51_100_29_last_boot",
+  "friendly_name": "RLTech OLT 198.51.100.29 Last boot",
+  "name": "Last boot"
+ },
+ "olt_memory_usage": {
+  "entity_id": "sensor.rltech_olt_198_51_100_29_memory_usage",
+  "friendly_name": "RLTech OLT 198.51.100.29 Memory usage",
+  "name": "Memory usage"
+ },
+ "olt_system_uptime": {
+  "entity_id": "sensor.rltech_olt_198_51_100_29_system_uptime",
+  "friendly_name": "RLTech OLT 198.51.100.29 System uptime",
+  "name": "System uptime"
+ },
+ "online_ap_count": {
+  "entity_id": "sensor.rltech_olt_198_51_100_29_online_ap_count",
+  "friendly_name": "RLTech OLT 198.51.100.29 Online AP count",
+  "name": "Online AP count"
+ },
+ "poll_duration": {
+  "entity_id": "sensor.rltech_olt_198_51_100_29_poll_duration",
+  "friendly_name": "RLTech OLT 198.51.100.29 Poll duration",
+  "name": "Poll duration"
+ },
+ "reported_station_count": {
+  "entity_id": "sensor.rltech_olt_198_51_100_29_reported_station_count",
+  "friendly_name": "RLTech OLT 198.51.100.29 Reported station count",
+  "name": "Reported station count"
+ },
+ "uplink_pon_bias_current": {
+  "entity_id": "sensor.rltech_olt_198_51_100_29_pon_bias_current",
+  "friendly_name": "RLTech OLT 198.51.100.29 PON bias current",
+  "name": "PON bias current"
+ },
+ "uplink_pon_link_type": {
+  "entity_id": "sensor.rltech_olt_198_51_100_29_pon_link_type",
+  "friendly_name": "RLTech OLT 198.51.100.29 PON link type",
+  "name": "PON link type"
+ },
+ "uplink_pon_online_status": {
+  "entity_id": "sensor.rltech_olt_198_51_100_29_pon_online_status",
+  "friendly_name": "RLTech OLT 198.51.100.29 PON online status",
+  "name": "PON online status"
+ },
+ "uplink_pon_rx_power": {
+  "entity_id": "sensor.rltech_olt_198_51_100_29_pon_rx_power",
+  "friendly_name": "RLTech OLT 198.51.100.29 PON RX power",
+  "name": "PON RX power"
+ },
+ "uplink_pon_temperature": {
+  "entity_id": "sensor.rltech_olt_198_51_100_29_pon_temperature",
+  "friendly_name": "RLTech OLT 198.51.100.29 PON temperature",
+  "name": "PON temperature"
+ },
+ "uplink_pon_tx_power": {
+  "entity_id": "sensor.rltech_olt_198_51_100_29_pon_tx_power",
+  "friendly_name": "RLTech OLT 198.51.100.29 PON TX power",
+  "name": "PON TX power"
+ },
+ "uplink_pon_voltage": {
+  "entity_id": "sensor.rltech_olt_198_51_100_29_pon_voltage",
+  "friendly_name": "RLTech OLT 198.51.100.29 PON voltage",
+  "name": "PON voltage"
+ },
+ "web_polling": {
+  "entity_id": "switch.rltech_olt_198_51_100_29_web_polling",
+  "friendly_name": "RLTech OLT 198.51.100.29 Web UI polling",
+  "name": "Web UI polling"
+ }
+}
